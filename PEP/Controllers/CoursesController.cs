@@ -30,8 +30,8 @@ namespace PEP.Controllers
                     ChapterCount = course.ChapterCount,
                     Introduction = course.Introduction,
                     ImageUrl = course.ImageUrl,
-                    CourseTags = course.CourseTags
-                });
+                    CourseTags = course.CourseTags.Select(ct => ct.TagName).ToList()
+            }); ;
             }
             return Ok(allcoursesDTO);
         }
@@ -49,7 +49,7 @@ namespace PEP.Controllers
                     ChapterCount = uc.Course.ChapterCount,
                     Introduction = uc.Course.Introduction,
                     ImageUrl = uc.Course.ImageUrl,
-                    CourseTags = uc.Course.CourseTags
+                    CourseTags = uc.Course.CourseTags.Select(ct => ct.TagName).ToList()
                 })
                 .ToList();
 

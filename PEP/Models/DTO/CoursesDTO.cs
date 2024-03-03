@@ -15,7 +15,7 @@ namespace PEP.Models.DTO
         public string? ImageUrl { get; set; }
 
 
-        public virtual ICollection<CourseTag> CourseTags { get; set; } = new List<CourseTag>();
+        public virtual ICollection<string> CourseTags { get; set; } = new List<string>();
 
  
     }

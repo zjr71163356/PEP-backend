@@ -4,3 +4,5 @@ GET {{PEP_HostAddress}}/api/Courses
 Accept: application/json
 
 ###
+GET {{PEP_HostAddress}}/api/Courses/1
+Accept: application/json
