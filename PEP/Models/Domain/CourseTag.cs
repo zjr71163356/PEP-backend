@@ -13,5 +13,5 @@ public partial class CourseTag
 
     public int TagColor { get; set; }
 
- 
+    public virtual Course Course { get; set; } = null!;
 }
