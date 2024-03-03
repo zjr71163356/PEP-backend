@@ -1,0 +1,6 @@
+@PEP_HostAddress = http://localhost:5010
+
+GET {{PEP_HostAddress}}/api/Courses
+Accept: application/json
+
+###
