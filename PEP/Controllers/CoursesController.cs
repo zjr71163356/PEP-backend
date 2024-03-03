@@ -20,11 +20,11 @@ namespace PEP.Controllers
         [HttpGet]
         public IActionResult GetAllCoursesList()
         {
-            var allcourses = dbContext.Courses.ToList();
-            var allcoursesDTO = new List<CoursesDTO>();
+            var allcourses = dbContext.Courses.Include(c => c.CourseTags).ToList();
+            var allcoursesDTO = new List<CoursesIntroDTO>();
             foreach (var course in allcourses)
             {
-                allcoursesDTO.Add(new CoursesDTO
+                allcoursesDTO.Add(new CoursesIntroDTO
                 {
                     CourseName = course.CourseName,
                     ChapterCount = course.ChapterCount,
@@ -43,8 +43,8 @@ namespace PEP.Controllers
  
             var userCoursesList = dbContext.UserCourses
                 .Where(uc => uc.UserId == userId)
-                .Select(uc => new CoursesDTO
-                {
+                .Select(uc => new CoursesIntroDTO
+                {    
                     CourseName = uc.Course.CourseName,
                     ChapterCount = uc.Course.ChapterCount,
                     Introduction = uc.Course.Introduction,

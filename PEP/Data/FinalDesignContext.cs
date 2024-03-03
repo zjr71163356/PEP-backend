@@ -36,7 +36,7 @@ public partial class FinalDesignContext : DbContext
 
     public virtual DbSet<SubmissionRecord> SubmissionRecords { get; set; }
 
-    public virtual DbSet<TestDatum> TestData { get; set; }
+    public virtual DbSet<TestData> TestData { get; set; }
 
     public virtual DbSet<User> Users { get; set; }
 
@@ -335,7 +335,7 @@ public partial class FinalDesignContext : DbContext
                 .HasConstraintName("FK__records__user_id__634EBE90");
         });
 
-        modelBuilder.Entity<TestDatum>(entity =>
+        modelBuilder.Entity<TestData>(entity =>
         {
             entity.HasKey(e => e.TestDataId).HasName("PK__test_dat__C3AF6FF27FC55BE2");
 
