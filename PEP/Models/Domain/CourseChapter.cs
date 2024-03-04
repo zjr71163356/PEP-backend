@@ -11,7 +11,7 @@ public partial class CourseChapter
 
     public string Title { get; set; } = null!;
 
-    public decimal ChapterNumber { get; set; }
+    public int ChapterNumber { get; set; }
 
     public virtual Course? Course { get; set; }
 

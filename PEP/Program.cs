@@ -14,6 +14,12 @@ builder.Services.AddDbContext<FinalDesignContext>(option =>
 
 var app = builder.Build();
 
+// Enable CORS
+app.UseCors(builder => builder
+    .AllowAnyOrigin()
+    .AllowAnyMethod()
+    .AllowAnyHeader());
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {

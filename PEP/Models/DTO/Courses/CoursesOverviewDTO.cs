@@ -1,10 +1,10 @@
 ﻿using PEP.Model.Domain;
 
-namespace PEP.Models.DTO
+namespace PEP.Models.DTO.Courses
 {
-    public class CoursesIntroDTO
+    public class CoursesOverviewDTO
     {
- 
+
 
         public string CourseName { get; set; } = null!;
 
@@ -15,8 +15,8 @@ namespace PEP.Models.DTO
         public string? ImageUrl { get; set; }
 
 
-        public virtual ICollection<string> CourseTags { get; set; } = new List<string>();
+        public virtual ICollection<CoursesTagDTO> CourseTags { get; set; } = new List<CoursesTagDTO>();
 
- 
+
     }
 }
