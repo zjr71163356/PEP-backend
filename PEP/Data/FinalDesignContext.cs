@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
-using PEP.Model.Domain;
+using PEP.Models;
 
-namespace PEP;
+namespace PEP.Data;
 
 public partial class FinalDesignContext : DbContext
 {
@@ -36,7 +36,7 @@ public partial class FinalDesignContext : DbContext
 
     public virtual DbSet<SubmissionRecord> SubmissionRecords { get; set; }
 
-    public virtual DbSet<TestData> TestData { get; set; }
+    public virtual DbSet<TestDatum> TestData { get; set; }
 
     public virtual DbSet<User> Users { get; set; }
 
@@ -126,9 +126,7 @@ public partial class FinalDesignContext : DbContext
             entity.ToTable("course_chapters");
 
             entity.Property(e => e.ChapterId).HasColumnName("chapter_id");
-            entity.Property(e => e.ChapterNumber)
-                .HasColumnType("decimal(5, 2)")
-                .HasColumnName("chapter_number");
+            entity.Property(e => e.ChapterNumber).HasColumnName("chapter_number");
             entity.Property(e => e.CourseId).HasColumnName("course_id");
             entity.Property(e => e.Title)
                 .HasMaxLength(255)
@@ -332,10 +330,10 @@ public partial class FinalDesignContext : DbContext
 
             entity.HasOne(d => d.User).WithMany(p => p.SubmissionRecords)
                 .HasForeignKey(d => d.UserId)
-                .HasConstraintName("FK__records__user_id__634EBE90");
+                .HasConstraintName("FK__submissio__user___793DFFAF");
         });
 
-        modelBuilder.Entity<TestData>(entity =>
+        modelBuilder.Entity<TestDatum>(entity =>
         {
             entity.HasKey(e => e.TestDataId).HasName("PK__test_dat__C3AF6FF27FC55BE2");
 
@@ -358,9 +356,7 @@ public partial class FinalDesignContext : DbContext
 
             entity.ToTable("users");
 
-            entity.Property(e => e.UserId)
-                .ValueGeneratedNever()
-                .HasColumnName("user_id");
+            entity.Property(e => e.UserId).HasColumnName("user_id");
             entity.Property(e => e.Account)
                 .HasMaxLength(50)
                 .IsUnicode(false)

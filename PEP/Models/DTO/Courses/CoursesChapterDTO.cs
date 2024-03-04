@@ -1,4 +1,4 @@
-﻿using PEP.Model.Domain;
+﻿ 
 
 namespace PEP.Models.DTO.Courses
 {

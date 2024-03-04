@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using PEP.Model.Domain;
+using PEP.Data;
+using PEP.Models;
 using PEP.Models.DTO.Courses;
+ 
 
 namespace PEP.Controllers
 {

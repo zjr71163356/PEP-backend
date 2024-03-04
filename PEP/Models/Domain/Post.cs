@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace PEP.Model.Domain;
+namespace PEP.Models;
 
 public partial class Post
 {

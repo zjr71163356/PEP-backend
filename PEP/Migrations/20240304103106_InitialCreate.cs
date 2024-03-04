@@ -48,7 +48,8 @@ namespace PEP.Migrations
                 name: "users",
                 columns: table => new
                 {
-                    user_id = table.Column<int>(type: "int", nullable: false),
+                    user_id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     user_name = table.Column<string>(type: "varchar(255)", unicode: false, maxLength: 255, nullable: false),
                     account = table.Column<string>(type: "varchar(50)", unicode: false, maxLength: 50, nullable: false),
                     password = table.Column<string>(type: "varchar(255)", unicode: false, maxLength: 255, nullable: false),
@@ -109,7 +110,7 @@ namespace PEP.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     course_id = table.Column<int>(type: "int", nullable: true),
                     title = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
-                    chapter_number = table.Column<decimal>(type: "decimal(5,2)", nullable: false)
+                    chapter_number = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -197,7 +198,7 @@ namespace PEP.Migrations
                         principalTable: "algorithm_problems",
                         principalColumn: "problem_id");
                     table.ForeignKey(
-                        name: "FK__records__user_id__634EBE90",
+                        name: "FK__submissio__user___793DFFAF",
                         column: x => x.user_id,
                         principalTable: "users",
                         principalColumn: "user_id");

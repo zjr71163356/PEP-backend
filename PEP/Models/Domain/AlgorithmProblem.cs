@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace PEP.Model.Domain;
+namespace PEP.Models;
 
 public partial class AlgorithmProblem
 {
@@ -23,5 +23,5 @@ public partial class AlgorithmProblem
 
     public virtual ICollection<SubmissionRecord> SubmissionRecords { get; set; } = new List<SubmissionRecord>();
 
-    public virtual ICollection<TestData> TestData { get; set; } = new List<TestData>();
+    public virtual ICollection<TestDatum> TestData { get; set; } = new List<TestDatum>();
 }

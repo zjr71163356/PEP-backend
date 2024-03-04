@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace PEP.Model.Domain;
+namespace PEP.Models;
 
-public partial class TestData
+public partial class TestDatum
 {
     public int TestDataId { get; set; }
 

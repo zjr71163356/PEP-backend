@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using PEP;
+using PEP.Data;
 
 #nullable disable
 
@@ -22,7 +22,7 @@ namespace PEP.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("PEP.Model.Domain.AlgorithmProblem", b =>
+            modelBuilder.Entity("PEP.Models.AlgorithmProblem", b =>
                 {
                     b.Property<int>("ProblemId")
                         .ValueGeneratedOnAdd()
@@ -60,7 +60,7 @@ namespace PEP.Migrations
                     b.ToTable("algorithm_problems", (string)null);
                 });
 
-            modelBuilder.Entity("PEP.Model.Domain.Comment", b =>
+            modelBuilder.Entity("PEP.Models.Comment", b =>
                 {
                     b.Property<int>("CommentId")
                         .ValueGeneratedOnAdd()
@@ -107,7 +107,7 @@ namespace PEP.Migrations
                     b.ToTable("comments", (string)null);
                 });
 
-            modelBuilder.Entity("PEP.Model.Domain.Course", b =>
+            modelBuilder.Entity("PEP.Models.Course", b =>
                 {
                     b.Property<int>("CourseId")
                         .ValueGeneratedOnAdd()
@@ -143,7 +143,7 @@ namespace PEP.Migrations
                     b.ToTable("courses", (string)null);
                 });
 
-            modelBuilder.Entity("PEP.Model.Domain.CourseChapter", b =>
+            modelBuilder.Entity("PEP.Models.CourseChapter", b =>
                 {
                     b.Property<int>("ChapterId")
                         .ValueGeneratedOnAdd()
@@ -152,8 +152,8 @@ namespace PEP.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ChapterId"));
 
-                    b.Property<decimal>("ChapterNumber")
-                        .HasColumnType("decimal(5, 2)")
+                    b.Property<int>("ChapterNumber")
+                        .HasColumnType("int")
                         .HasColumnName("chapter_number");
 
                     b.Property<int?>("CourseId")
@@ -174,7 +174,7 @@ namespace PEP.Migrations
                     b.ToTable("course_chapters", (string)null);
                 });
 
-            modelBuilder.Entity("PEP.Model.Domain.CourseTag", b =>
+            modelBuilder.Entity("PEP.Models.CourseTag", b =>
                 {
                     b.Property<int>("TagId")
                         .ValueGeneratedOnAdd()
@@ -206,7 +206,7 @@ namespace PEP.Migrations
                     b.ToTable("course_tags", (string)null);
                 });
 
-            modelBuilder.Entity("PEP.Model.Domain.Post", b =>
+            modelBuilder.Entity("PEP.Models.Post", b =>
                 {
                     b.Property<int>("PostId")
                         .ValueGeneratedOnAdd()
@@ -267,7 +267,7 @@ namespace PEP.Migrations
                     b.ToTable("posts", (string)null);
                 });
 
-            modelBuilder.Entity("PEP.Model.Domain.ProblemTag", b =>
+            modelBuilder.Entity("PEP.Models.ProblemTag", b =>
                 {
                     b.Property<int>("TagId")
                         .ValueGeneratedOnAdd()
@@ -298,7 +298,7 @@ namespace PEP.Migrations
                     b.ToTable("problem_tags", (string)null);
                 });
 
-            modelBuilder.Entity("PEP.Model.Domain.Reply", b =>
+            modelBuilder.Entity("PEP.Models.Reply", b =>
                 {
                     b.Property<int>("ReplyId")
                         .ValueGeneratedOnAdd()
@@ -357,7 +357,7 @@ namespace PEP.Migrations
                     b.ToTable("replies", (string)null);
                 });
 
-            modelBuilder.Entity("PEP.Model.Domain.SubChapter", b =>
+            modelBuilder.Entity("PEP.Models.SubChapter", b =>
                 {
                     b.Property<int>("SubChapterId")
                         .ValueGeneratedOnAdd()
@@ -403,7 +403,7 @@ namespace PEP.Migrations
                     b.ToTable("sub_chapters", (string)null);
                 });
 
-            modelBuilder.Entity("PEP.Model.Domain.SubmissionRecord", b =>
+            modelBuilder.Entity("PEP.Models.SubmissionRecord", b =>
                 {
                     b.Property<int>("RecordId")
                         .HasColumnType("int")
@@ -471,7 +471,7 @@ namespace PEP.Migrations
                     b.ToTable("submission_records", (string)null);
                 });
 
-            modelBuilder.Entity("PEP.Model.Domain.TestData", b =>
+            modelBuilder.Entity("PEP.Models.TestDatum", b =>
                 {
                     b.Property<int>("TestDataId")
                         .ValueGeneratedOnAdd()
@@ -506,11 +506,14 @@ namespace PEP.Migrations
                     b.ToTable("test_data", (string)null);
                 });
 
-            modelBuilder.Entity("PEP.Model.Domain.User", b =>
+            modelBuilder.Entity("PEP.Models.User", b =>
                 {
                     b.Property<int>("UserId")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasColumnName("user_id");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UserId"));
 
                     b.Property<string>("Account")
                         .IsRequired()
@@ -552,7 +555,7 @@ namespace PEP.Migrations
                     b.ToTable("users", (string)null);
                 });
 
-            modelBuilder.Entity("PEP.Model.Domain.UserCourse", b =>
+            modelBuilder.Entity("PEP.Models.UserCourse", b =>
                 {
                     b.Property<int>("UserCourseId")
                         .ValueGeneratedOnAdd()
@@ -561,7 +564,7 @@ namespace PEP.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UserCourseId"));
 
-                    b.Property<int>("CourseId")
+                    b.Property<int?>("CourseId")
                         .HasColumnType("int")
                         .HasColumnName("course_id");
 
@@ -569,7 +572,7 @@ namespace PEP.Migrations
                         .HasColumnType("bit")
                         .HasColumnName("is_favorite");
 
-                    b.Property<int>("UserId")
+                    b.Property<int?>("UserId")
                         .HasColumnType("int")
                         .HasColumnName("user_id");
 
@@ -583,15 +586,15 @@ namespace PEP.Migrations
                     b.ToTable("user_courses", (string)null);
                 });
 
-            modelBuilder.Entity("PEP.Model.Domain.Comment", b =>
+            modelBuilder.Entity("PEP.Models.Comment", b =>
                 {
-                    b.HasOne("PEP.Model.Domain.User", "FromUser")
+                    b.HasOne("PEP.Models.User", "FromUser")
                         .WithMany("Comments")
                         .HasForeignKey("FromUserId")
                         .IsRequired()
                         .HasConstraintName("fk_comment_to_user_id");
 
-                    b.HasOne("PEP.Model.Domain.Post", "Post")
+                    b.HasOne("PEP.Models.Post", "Post")
                         .WithMany("Comments")
                         .HasForeignKey("PostId")
                         .IsRequired()
@@ -602,9 +605,9 @@ namespace PEP.Migrations
                     b.Navigation("Post");
                 });
 
-            modelBuilder.Entity("PEP.Model.Domain.CourseChapter", b =>
+            modelBuilder.Entity("PEP.Models.CourseChapter", b =>
                 {
-                    b.HasOne("PEP.Model.Domain.Course", "Course")
+                    b.HasOne("PEP.Models.Course", "Course")
                         .WithMany("CourseChapters")
                         .HasForeignKey("CourseId")
                         .HasConstraintName("fk_course_chapters_course_id");
@@ -612,9 +615,9 @@ namespace PEP.Migrations
                     b.Navigation("Course");
                 });
 
-            modelBuilder.Entity("PEP.Model.Domain.CourseTag", b =>
+            modelBuilder.Entity("PEP.Models.CourseTag", b =>
                 {
-                    b.HasOne("PEP.Model.Domain.Course", "Course")
+                    b.HasOne("PEP.Models.Course", "Course")
                         .WithMany("CourseTags")
                         .HasForeignKey("CourseId")
                         .IsRequired()
@@ -623,14 +626,14 @@ namespace PEP.Migrations
                     b.Navigation("Course");
                 });
 
-            modelBuilder.Entity("PEP.Model.Domain.Post", b =>
+            modelBuilder.Entity("PEP.Models.Post", b =>
                 {
-                    b.HasOne("PEP.Model.Domain.AlgorithmProblem", "Problem")
+                    b.HasOne("PEP.Models.AlgorithmProblem", "Problem")
                         .WithMany("Posts")
                         .HasForeignKey("ProblemId")
                         .HasConstraintName("fk_posts_algorithm_problems");
 
-                    b.HasOne("PEP.Model.Domain.User", "User")
+                    b.HasOne("PEP.Models.User", "User")
                         .WithMany("Posts")
                         .HasForeignKey("UserId")
                         .IsRequired()
@@ -641,9 +644,9 @@ namespace PEP.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("PEP.Model.Domain.ProblemTag", b =>
+            modelBuilder.Entity("PEP.Models.ProblemTag", b =>
                 {
-                    b.HasOne("PEP.Model.Domain.AlgorithmProblem", "Problem")
+                    b.HasOne("PEP.Models.AlgorithmProblem", "Problem")
                         .WithMany("ProblemTags")
                         .HasForeignKey("ProblemId")
                         .HasConstraintName("fk_problem_tags_problem_id");
@@ -651,21 +654,21 @@ namespace PEP.Migrations
                     b.Navigation("Problem");
                 });
 
-            modelBuilder.Entity("PEP.Model.Domain.Reply", b =>
+            modelBuilder.Entity("PEP.Models.Reply", b =>
                 {
-                    b.HasOne("PEP.Model.Domain.Comment", "Comment")
+                    b.HasOne("PEP.Models.Comment", "Comment")
                         .WithMany("Replies")
                         .HasForeignKey("CommentId")
                         .IsRequired()
                         .HasConstraintName("fk_replies_comment_id");
 
-                    b.HasOne("PEP.Model.Domain.User", "FromUser")
+                    b.HasOne("PEP.Models.User", "FromUser")
                         .WithMany("ReplyFromUsers")
                         .HasForeignKey("FromUserId")
                         .IsRequired()
                         .HasConstraintName("fk_replies_from_user_id");
 
-                    b.HasOne("PEP.Model.Domain.User", "ToUser")
+                    b.HasOne("PEP.Models.User", "ToUser")
                         .WithMany("ReplyToUsers")
                         .HasForeignKey("ToUserId")
                         .IsRequired()
@@ -678,14 +681,14 @@ namespace PEP.Migrations
                     b.Navigation("ToUser");
                 });
 
-            modelBuilder.Entity("PEP.Model.Domain.SubChapter", b =>
+            modelBuilder.Entity("PEP.Models.SubChapter", b =>
                 {
-                    b.HasOne("PEP.Model.Domain.Course", "Course")
+                    b.HasOne("PEP.Models.Course", "Course")
                         .WithMany("SubChapters")
                         .HasForeignKey("CourseId")
                         .HasConstraintName("fk_sub_chapters_course_id");
 
-                    b.HasOne("PEP.Model.Domain.CourseChapter", "ParentChapter")
+                    b.HasOne("PEP.Models.CourseChapter", "ParentChapter")
                         .WithMany("SubChapters")
                         .HasForeignKey("ParentChapterId")
                         .HasConstraintName("fk_sub_chapters_parent_chapter_id");
@@ -695,26 +698,26 @@ namespace PEP.Migrations
                     b.Navigation("ParentChapter");
                 });
 
-            modelBuilder.Entity("PEP.Model.Domain.SubmissionRecord", b =>
+            modelBuilder.Entity("PEP.Models.SubmissionRecord", b =>
                 {
-                    b.HasOne("PEP.Model.Domain.AlgorithmProblem", "Problem")
+                    b.HasOne("PEP.Models.AlgorithmProblem", "Problem")
                         .WithMany("SubmissionRecords")
                         .HasForeignKey("ProblemId")
                         .HasConstraintName("FK__records__problem__625A9A57");
 
-                    b.HasOne("PEP.Model.Domain.User", "User")
+                    b.HasOne("PEP.Models.User", "User")
                         .WithMany("SubmissionRecords")
                         .HasForeignKey("UserId")
-                        .HasConstraintName("FK__records__user_id__634EBE90");
+                        .HasConstraintName("FK__submissio__user___793DFFAF");
 
                     b.Navigation("Problem");
 
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("PEP.Model.Domain.TestData", b =>
+            modelBuilder.Entity("PEP.Models.TestDatum", b =>
                 {
-                    b.HasOne("PEP.Model.Domain.AlgorithmProblem", "Problem")
+                    b.HasOne("PEP.Models.AlgorithmProblem", "Problem")
                         .WithMany("TestData")
                         .HasForeignKey("ProblemId")
                         .HasConstraintName("fk_test_data_problem_id");
@@ -722,20 +725,16 @@ namespace PEP.Migrations
                     b.Navigation("Problem");
                 });
 
-            modelBuilder.Entity("PEP.Model.Domain.UserCourse", b =>
+            modelBuilder.Entity("PEP.Models.UserCourse", b =>
                 {
-                    b.HasOne("PEP.Model.Domain.Course", "Course")
+                    b.HasOne("PEP.Models.Course", "Course")
                         .WithMany("UserCourses")
                         .HasForeignKey("CourseId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
                         .HasConstraintName("fk_user_courses_course_id");
 
-                    b.HasOne("PEP.Model.Domain.User", "User")
+                    b.HasOne("PEP.Models.User", "User")
                         .WithMany("UserCourses")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
                         .HasConstraintName("fk_user_courses_user_id");
 
                     b.Navigation("Course");
@@ -743,7 +742,7 @@ namespace PEP.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("PEP.Model.Domain.AlgorithmProblem", b =>
+            modelBuilder.Entity("PEP.Models.AlgorithmProblem", b =>
                 {
                     b.Navigation("Posts");
 
@@ -754,12 +753,12 @@ namespace PEP.Migrations
                     b.Navigation("TestData");
                 });
 
-            modelBuilder.Entity("PEP.Model.Domain.Comment", b =>
+            modelBuilder.Entity("PEP.Models.Comment", b =>
                 {
                     b.Navigation("Replies");
                 });
 
-            modelBuilder.Entity("PEP.Model.Domain.Course", b =>
+            modelBuilder.Entity("PEP.Models.Course", b =>
                 {
                     b.Navigation("CourseChapters");
 
@@ -770,17 +769,17 @@ namespace PEP.Migrations
                     b.Navigation("UserCourses");
                 });
 
-            modelBuilder.Entity("PEP.Model.Domain.CourseChapter", b =>
+            modelBuilder.Entity("PEP.Models.CourseChapter", b =>
                 {
                     b.Navigation("SubChapters");
                 });
 
-            modelBuilder.Entity("PEP.Model.Domain.Post", b =>
+            modelBuilder.Entity("PEP.Models.Post", b =>
                 {
                     b.Navigation("Comments");
                 });
 
-            modelBuilder.Entity("PEP.Model.Domain.User", b =>
+            modelBuilder.Entity("PEP.Models.User", b =>
                 {
                     b.Navigation("Comments");
 
