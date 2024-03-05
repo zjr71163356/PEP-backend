@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace PEP.Models;
+namespace PEP.Models.Domain;
 
 public partial class AlgorithmProblem
 {
@@ -11,11 +11,11 @@ public partial class AlgorithmProblem
 
     public int? AcceptRate { get; set; }
 
-    public string? Difficulty { get; set; }
+    public string Difficulty { get; set; } = null!;
 
     public int? TestAmount { get; set; }
 
-    public string? ProblemContent { get; set; }
+    public string ProblemContent { get; set; } = null!;
 
     public virtual ICollection<Post> Posts { get; set; } = new List<Post>();
 

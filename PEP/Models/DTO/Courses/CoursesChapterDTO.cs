@@ -6,7 +6,7 @@ namespace PEP.Models.DTO.Courses
     {
         public int ChapterId { get; set; }
 
-        public int? CourseId { get; set; }
+        public int  CourseId { get; set; }
 
         public string Title { get; set; } = null!;
 

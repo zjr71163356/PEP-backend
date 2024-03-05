@@ -2,7 +2,7 @@
 {
     public class CoursesTagDTO
     {
-        public string TagName { get; set; }
+        public string TagName { get; set; }=null!;
         public int TagColor { get; set; }
     }
 }

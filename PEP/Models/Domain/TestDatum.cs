@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace PEP.Models;
+namespace PEP.Models.Domain;
 
 public partial class TestDatum
 {
     public int TestDataId { get; set; }
 
-    public int? ProblemId { get; set; }
+    public int ProblemId { get; set; }
 
     public int? SequenceNumber { get; set; }
 
@@ -15,5 +15,5 @@ public partial class TestDatum
 
     public string OutputData { get; set; } = null!;
 
-    public virtual AlgorithmProblem? Problem { get; set; }
+    public virtual AlgorithmProblem Problem { get; set; } = null!;
 }

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace PEP.Models;
+namespace PEP.Models.Domain;
 
 public partial class Post
 {
@@ -21,11 +21,11 @@ public partial class Post
 
     public string? AvatarImgurl { get; set; }
 
-    public int? ProblemId { get; set; }
+    public int ProblemId { get; set; }
 
     public virtual ICollection<Comment> Comments { get; set; } = new List<Comment>();
 
-    public virtual AlgorithmProblem? Problem { get; set; }
+    public virtual AlgorithmProblem Problem { get; set; } = null!;
 
     public virtual User User { get; set; } = null!;
 }

@@ -1,10 +1,8 @@
-﻿ 
-
-namespace PEP.Models.DTO.Courses
+﻿namespace PEP.Models.DTO.Courses
 {
-    public class CoursesOverviewDTO
+    public class CourseGetByIdDTO
     {
-
+ 
         public int CourseId { get; set; }
         public string CourseName { get; set; } = null!;
 
@@ -14,9 +12,12 @@ namespace PEP.Models.DTO.Courses
 
         public string? ImageUrl { get; set; }
 
+        public virtual ICollection<CoursesChapterDTO> CourseChapters { get; set; } = new List<CoursesChapterDTO>();
 
         public virtual ICollection<CoursesTagDTO> CourseTags { get; set; } = new List<CoursesTagDTO>();
 
+        
 
+    
     }
 }

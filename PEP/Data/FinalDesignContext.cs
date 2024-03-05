@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
-using PEP.Models;
+using PEP.Models.Domain;
 
 namespace PEP.Data;
 
@@ -89,12 +89,12 @@ public partial class FinalDesignContext : DbContext
 
             entity.HasOne(d => d.FromUser).WithMany(p => p.Comments)
                 .HasForeignKey(d => d.FromUserId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("fk_comment_to_user_id");
 
             entity.HasOne(d => d.Post).WithMany(p => p.Comments)
                 .HasForeignKey(d => d.PostId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("fk_comments_post_id");
         });
 
@@ -117,6 +117,7 @@ public partial class FinalDesignContext : DbContext
             entity.Property(e => e.Introduction)
                 .HasColumnType("text")
                 .HasColumnName("introduction");
+ 
         });
 
         modelBuilder.Entity<CourseChapter>(entity =>
@@ -134,6 +135,7 @@ public partial class FinalDesignContext : DbContext
 
             entity.HasOne(d => d.Course).WithMany(p => p.CourseChapters)
                 .HasForeignKey(d => d.CourseId)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("fk_course_chapters_course_id");
         });
 
@@ -153,7 +155,7 @@ public partial class FinalDesignContext : DbContext
 
             entity.HasOne(d => d.Course).WithMany(p => p.CourseTags)
                 .HasForeignKey(d => d.CourseId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("fk_tag_course");
         });
 
@@ -188,11 +190,12 @@ public partial class FinalDesignContext : DbContext
 
             entity.HasOne(d => d.Problem).WithMany(p => p.Posts)
                 .HasForeignKey(d => d.ProblemId)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("fk_posts_algorithm_problems");
 
             entity.HasOne(d => d.User).WithMany(p => p.Posts)
                 .HasForeignKey(d => d.UserId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("fk_posts_user_id");
         });
 
@@ -211,6 +214,7 @@ public partial class FinalDesignContext : DbContext
 
             entity.HasOne(d => d.Problem).WithMany(p => p.ProblemTags)
                 .HasForeignKey(d => d.ProblemId)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("fk_problem_tags_problem_id");
         });
 
@@ -240,17 +244,17 @@ public partial class FinalDesignContext : DbContext
 
             entity.HasOne(d => d.Comment).WithMany(p => p.Replies)
                 .HasForeignKey(d => d.CommentId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("fk_replies_comment_id");
 
             entity.HasOne(d => d.FromUser).WithMany(p => p.ReplyFromUsers)
                 .HasForeignKey(d => d.FromUserId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("fk_replies_from_user_id");
 
             entity.HasOne(d => d.ToUser).WithMany(p => p.ReplyToUsers)
                 .HasForeignKey(d => d.ToUserId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("fk_replies_to_user_id");
         });
 
@@ -276,10 +280,12 @@ public partial class FinalDesignContext : DbContext
 
             entity.HasOne(d => d.Course).WithMany(p => p.SubChapters)
                 .HasForeignKey(d => d.CourseId)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("fk_sub_chapters_course_id");
 
             entity.HasOne(d => d.ParentChapter).WithMany(p => p.SubChapters)
                 .HasForeignKey(d => d.ParentChapterId)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("fk_sub_chapters_parent_chapter_id");
         });
 
@@ -326,11 +332,13 @@ public partial class FinalDesignContext : DbContext
 
             entity.HasOne(d => d.Problem).WithMany(p => p.SubmissionRecords)
                 .HasForeignKey(d => d.ProblemId)
-                .HasConstraintName("FK__records__problem__625A9A57");
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("FK__submissio__probl__3552E9B6");
 
             entity.HasOne(d => d.User).WithMany(p => p.SubmissionRecords)
                 .HasForeignKey(d => d.UserId)
-                .HasConstraintName("FK__submissio__user___793DFFAF");
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("FK__submissio__user___36470DEF");
         });
 
         modelBuilder.Entity<TestDatum>(entity =>
@@ -347,6 +355,7 @@ public partial class FinalDesignContext : DbContext
 
             entity.HasOne(d => d.Problem).WithMany(p => p.TestData)
                 .HasForeignKey(d => d.ProblemId)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("fk_test_data_problem_id");
         });
 
@@ -392,10 +401,12 @@ public partial class FinalDesignContext : DbContext
 
             entity.HasOne(d => d.Course).WithMany(p => p.UserCourses)
                 .HasForeignKey(d => d.CourseId)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("fk_user_courses_course_id");
 
             entity.HasOne(d => d.User).WithMany(p => p.UserCourses)
                 .HasForeignKey(d => d.UserId)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("fk_user_courses_user_id");
         });
 

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace PEP.Models;
+namespace PEP.Models.Domain;
 
 public partial class Course
 {
@@ -11,7 +11,7 @@ public partial class Course
 
     public int ChapterCount { get; set; }
 
-    public string? Introduction { get; set; }
+    public string Introduction { get; set; } = null!;
 
     public string? ImageUrl { get; set; }
 

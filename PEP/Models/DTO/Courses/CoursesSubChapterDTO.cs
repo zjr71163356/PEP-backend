@@ -3,6 +3,9 @@
     public class CoursesSubChapterDTO
     {
 
+        public int SubChapterId { get; set; }
+
+        public int CourseId { get; set; }
 
 
         public decimal SubChapterNumber { get; set; }

@@ -3,8 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PEP.Data;
 using PEP.Models;
+using PEP.Models.Domain;
 using PEP.Models.DTO.Courses;
- 
+
 
 namespace PEP.Controllers
 {
@@ -28,6 +29,7 @@ namespace PEP.Controllers
             {
                 allcoursesDTO.Add(new CoursesOverviewDTO
                 {
+                    CourseId = course.CourseId,
                     CourseName = course.CourseName,
                     ChapterCount = course.ChapterCount,
                     Introduction = course.Introduction,
@@ -42,34 +44,51 @@ namespace PEP.Controllers
             return Ok(allcoursesDTO);
         }
 
-        [HttpGet]
-        [Route("User/{userId:int}")]
-        public IActionResult GetUserCoursesList([FromRoute] int userId)
-        {
+        
 
-            var userCoursesList = dbContext.UserCourses
-                .Where(uc => uc.UserId == userId)
-                .Select(uc => new CoursesOverviewDTO
-                {
-                    CourseName = uc.Course.CourseName,
-                    ChapterCount = uc.Course.ChapterCount,
-                    Introduction = uc.Course.Introduction,
-                    ImageUrl = uc.Course.ImageUrl,
-                    CourseTags = uc.Course.CourseTags.Select(ct => new CoursesTagDTO
-                    {
-                        TagName = ct.TagName,
-                        TagColor = ct.TagColor
-                    }).ToList()
-                })
-                .ToList();
-            if (userCoursesList.Count == 0)
+        [HttpGet]
+        [Route("{courseId:int}")]
+        public IActionResult GetCourseById([FromRoute] int courseId)
+        {
+            var course = dbContext.Courses
+                .Include(c => c.CourseTags)
+                .Include(c => c.CourseChapters)
+                .ThenInclude(cc => cc.SubChapters)
+                .FirstOrDefault(c => c.CourseId == courseId);
+            if (course == null)
             {
                 return NotFound();
             }
-            return Ok(userCoursesList);
+            var courseDTO = new CourseGetByIdDTO
+            {
+                CourseId=course.CourseId,
+                CourseName = course.CourseName,
+                ChapterCount = course.ChapterCount,
+                Introduction = course.Introduction,
+                ImageUrl = course.ImageUrl,
+                CourseTags = course.CourseTags.Select(ct => new CoursesTagDTO
+                {
+                    TagName = ct.TagName,
+                    TagColor = ct.TagColor
+                }).ToList(),
+                CourseChapters = course.CourseChapters.Select(cc => new CoursesChapterDTO
+                {
+                    ChapterId = cc.ChapterId,
+                    CourseId = cc.CourseId,
+                    Title = cc.Title,
+                    ChapterNumber = cc.ChapterNumber,
+                    SubChapters = cc.SubChapters.Select(sc => new CoursesSubChapterDTO
+                    {
+                        CourseId = cc.CourseId,
+                        SubChapterId = sc.SubChapterId,
+                        Title = sc.Title,
+                        SubChapterNumber = sc.SubChapterNumber,
+                        MarkdownContent = sc.MarkdownContent
+                    }).ToList()
+                }).ToList()
+            };
+            return Ok(courseDTO);
         }
-        // ...
-
         [HttpPost]
         public IActionResult AddCourse([FromBody] CoursesAddDTO addCourseDTO)
         {
@@ -81,14 +100,15 @@ namespace PEP.Controllers
             var courseDomainModel = new Course
             {
                 // Add properties for the new course
+
                 CourseName = addCourseDTO.CourseName,
                 ChapterCount = addCourseDTO.ChapterCount,
                 Introduction = addCourseDTO.Introduction,
                 ImageUrl = addCourseDTO.ImageUrl,
-                CourseTags=addCourseDTO.CourseTags.Select(ct=>new CourseTag
+                CourseTags = addCourseDTO.CourseTags.Select(ct => new CourseTag
                 {
-                    TagName=ct.TagName,
-                    TagColor=ct.TagColor
+                    TagName = ct.TagName,
+                    TagColor = ct.TagColor
                 }).ToList(),
                 CourseChapters = addCourseDTO.CourseChapters.Select(cc => new CourseChapter
                 {
@@ -98,20 +118,78 @@ namespace PEP.Controllers
                     {
                         CourseId = cc.CourseId,
                         Title = sc.Title,
-                        ParentChapterId=cc.ChapterId,
+                        ParentChapterId = cc.ChapterId,
                         SubChapterNumber = sc.SubChapterNumber,
-                        ParentChapterNumber=cc.ChapterNumber,
+                        ParentChapterNumber = cc.ChapterNumber,
                         MarkdownContent = sc.MarkdownContent
                     }).ToList()
                 }).ToList()
-            
+
             };
 
-           
+
 
             dbContext.Courses.Add(courseDomainModel);
             dbContext.SaveChanges();
-            return CreatedAtAction(nameof(GetAllCoursesList), null);
+
+            return Ok(addCourseDTO);
         }
+
+        [HttpPut]
+        [Route("{courseId:int}")]
+        public IActionResult UpdateCourseOneStep([FromRoute] int courseId, [FromBody] CoursesUpdateOneStepDTO updateCourseOneStepDTO)
+        {
+            var course = dbContext.Courses
+                .Include(c => c.CourseTags)
+                .FirstOrDefault(c => c.CourseId == courseId);
+            if (course == null)
+            {
+                return NotFound();
+            }
+            course.CourseName = updateCourseOneStepDTO.CourseName;
+            course.ChapterCount = updateCourseOneStepDTO.ChapterCount;
+            course.Introduction = updateCourseOneStepDTO.Introduction;
+            course.ImageUrl = updateCourseOneStepDTO.ImageUrl;
+
+            foreach (var ct in course.CourseTags)
+            {
+                dbContext.CourseTags.Remove(ct);
+            }
+            course.CourseTags.Clear();
+            foreach (var ct in updateCourseOneStepDTO.CourseTags)
+            {
+                ct.TagColor = new Random().Next(1, 6);
+            }
+            course.CourseTags = updateCourseOneStepDTO.CourseTags.Select(ct => new CourseTag
+            {
+                TagName = ct.TagName,
+                TagColor = ct.TagColor
+            }).ToList();
+
+           
+
+            dbContext.SaveChanges();
+            return Ok(updateCourseOneStepDTO);
+        }
+
+        [HttpDelete]
+        [Route("{courseId:int}")]
+        public IActionResult deleteCourse([FromRoute] int courseId)
+        {
+            var course = dbContext.Courses
+                .Include(c => c.UserCourses)
+                .Include(c => c.CourseTags)
+                .Include(c => c.CourseChapters)
+                .ThenInclude(cc => cc.SubChapters)
+                .FirstOrDefault(c => c.CourseId == courseId);
+            if (course == null)
+            {
+                return NotFound();
+            }
+            dbContext.Courses.Remove(course);
+            dbContext.SaveChanges();
+            return Ok();
+        }
+
     }
 }

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace PEP.Models;
+namespace PEP.Models.Domain;
 
 public partial class User
 {

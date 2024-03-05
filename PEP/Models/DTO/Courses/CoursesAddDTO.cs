@@ -10,7 +10,7 @@ namespace PEP.Models.DTO.Courses
 
         public int ChapterCount { get; set; }
 
-        public string? Introduction { get; set; }
+        public string Introduction { get; set; } = null!;
 
         public string? ImageUrl { get; set; }
 

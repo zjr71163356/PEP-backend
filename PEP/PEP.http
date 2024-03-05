@@ -3,10 +3,16 @@
 GET {{PEP_HostAddress}}/api/Courses
 Accept: application/json
 
-###测试全部课程信息
+###查询全部课程信息
 GET {{PEP_HostAddress}}/api/Courses/User/1
 Accept: application/json
-###测试单个课程信息
+###查询某用户的课程信息
 GET {{PEP_HostAddress}}/api/Courses/User/4
 Accept: application/json
-###测试不存在的课程信息
+###查询不存在的用户的课程信息
+
+GET {{PEP_HostAddress}}/api/Courses/21
+Accept: application/json
+###查询单个课程信息
+
+POST {{PEP_HostAddress}}/api/Courses
