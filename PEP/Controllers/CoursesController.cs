@@ -21,9 +21,9 @@ namespace PEP.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetAllCoursesList()
+        public async Task<IActionResult> GetAllCoursesList()
         {
-            var allcourses = dbContext.Courses.Include(c => c.CourseTags).ToList();
+            var allcourses = await dbContext.Courses.Include(c => c.CourseTags).ToListAsync();
             var allcoursesDTO = new List<CoursesOverviewDTO>();
             foreach (var course in allcourses)
             {
@@ -44,24 +44,25 @@ namespace PEP.Controllers
             return Ok(allcoursesDTO);
         }
 
-        
+
 
         [HttpGet]
         [Route("{courseId:int}")]
-        public IActionResult GetCourseById([FromRoute] int courseId)
+        public async Task<IActionResult> GetCourseById([FromRoute] int courseId)
         {
-            var course = dbContext.Courses
+            var course = await dbContext.Courses
                 .Include(c => c.CourseTags)
                 .Include(c => c.CourseChapters)
+
                 .ThenInclude(cc => cc.SubChapters)
-                .FirstOrDefault(c => c.CourseId == courseId);
+                .FirstOrDefaultAsync(c => c.CourseId == courseId);
             if (course == null)
             {
                 return NotFound();
             }
             var courseDTO = new CourseGetByIdDTO
             {
-                CourseId=course.CourseId,
+                CourseId = course.CourseId,
                 CourseName = course.CourseName,
                 ChapterCount = course.ChapterCount,
                 Introduction = course.Introduction,
@@ -90,7 +91,7 @@ namespace PEP.Controllers
             return Ok(courseDTO);
         }
         [HttpPost]
-        public IActionResult AddCourse([FromBody] CoursesAddDTO addCourseDTO)
+        public async Task<IActionResult> AddCourse([FromBody] CoursesAddDTO addCourseDTO)
         {
             foreach (var ct in addCourseDTO.CourseTags)
             {
@@ -116,7 +117,7 @@ namespace PEP.Controllers
                     ChapterNumber = cc.ChapterNumber,
                     SubChapters = cc.SubChapters.Select(sc => new SubChapter
                     {
-                        CourseId = cc.CourseId,
+                  
                         Title = sc.Title,
                         ParentChapterId = cc.ChapterId,
                         SubChapterNumber = sc.SubChapterNumber,
@@ -129,19 +130,19 @@ namespace PEP.Controllers
 
 
 
-            dbContext.Courses.Add(courseDomainModel);
-            dbContext.SaveChanges();
+            await dbContext.Courses.AddAsync(courseDomainModel);
+            await dbContext.SaveChangesAsync();
 
-            return Ok(addCourseDTO);
+            return Ok( );
         }
 
         [HttpPut]
-        [Route("{courseId:int}")]
-        public IActionResult UpdateCourseOneStep([FromRoute] int courseId, [FromBody] CoursesUpdateOneStepDTO updateCourseOneStepDTO)
+        [Route("StepOne/{courseId:int}")]
+        public async Task<IActionResult> UpdateCourseOneStep([FromRoute] int courseId, [FromBody] CoursesUpdateOneStepDTO updateCourseOneStepDTO)
         {
-            var course = dbContext.Courses
+            var course = await dbContext.Courses
                 .Include(c => c.CourseTags)
-                .FirstOrDefault(c => c.CourseId == courseId);
+                .FirstOrDefaultAsync(c => c.CourseId == courseId);
             if (course == null)
             {
                 return NotFound();
@@ -156,38 +157,35 @@ namespace PEP.Controllers
                 dbContext.CourseTags.Remove(ct);
             }
             course.CourseTags.Clear();
-            foreach (var ct in updateCourseOneStepDTO.CourseTags)
-            {
-                ct.TagColor = new Random().Next(1, 6);
-            }
+
             course.CourseTags = updateCourseOneStepDTO.CourseTags.Select(ct => new CourseTag
             {
                 TagName = ct.TagName,
                 TagColor = ct.TagColor
             }).ToList();
 
-           
 
-            dbContext.SaveChanges();
+
+            await dbContext.SaveChangesAsync();
             return Ok(updateCourseOneStepDTO);
         }
 
         [HttpDelete]
         [Route("{courseId:int}")]
-        public IActionResult deleteCourse([FromRoute] int courseId)
+        public async Task<IActionResult> deleteCourse([FromRoute] int courseId)
         {
-            var course = dbContext.Courses
+            var course = await dbContext.Courses
                 .Include(c => c.UserCourses)
                 .Include(c => c.CourseTags)
                 .Include(c => c.CourseChapters)
                 .ThenInclude(cc => cc.SubChapters)
-                .FirstOrDefault(c => c.CourseId == courseId);
+                .FirstOrDefaultAsync(c => c.CourseId == courseId);
             if (course == null)
             {
                 return NotFound();
             }
             dbContext.Courses.Remove(course);
-            dbContext.SaveChanges();
+            await dbContext.SaveChangesAsync();
             return Ok();
         }
 

@@ -19,7 +19,5 @@ public partial class Course
 
     public virtual ICollection<CourseTag> CourseTags { get; set; } = new List<CourseTag>();
 
-    public virtual ICollection<SubChapter> SubChapters { get; set; } = new List<SubChapter>();
-
     public virtual ICollection<UserCourse> UserCourses { get; set; } = new List<UserCourse>();
 }

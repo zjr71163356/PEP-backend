@@ -117,7 +117,6 @@ public partial class FinalDesignContext : DbContext
             entity.Property(e => e.Introduction)
                 .HasColumnType("text")
                 .HasColumnName("introduction");
- 
         });
 
         modelBuilder.Entity<CourseChapter>(entity =>
@@ -265,7 +264,6 @@ public partial class FinalDesignContext : DbContext
             entity.ToTable("sub_chapters");
 
             entity.Property(e => e.SubChapterId).HasColumnName("sub_chapter_id");
-            entity.Property(e => e.CourseId).HasColumnName("course_id");
             entity.Property(e => e.MarkdownContent)
                 .HasColumnType("text")
                 .HasColumnName("markdown_content");
@@ -277,11 +275,6 @@ public partial class FinalDesignContext : DbContext
             entity.Property(e => e.Title)
                 .HasMaxLength(255)
                 .HasColumnName("title");
-
-            entity.HasOne(d => d.Course).WithMany(p => p.SubChapters)
-                .HasForeignKey(d => d.CourseId)
-                .OnDelete(DeleteBehavior.Cascade)
-                .HasConstraintName("fk_sub_chapters_course_id");
 
             entity.HasOne(d => d.ParentChapter).WithMany(p => p.SubChapters)
                 .HasForeignKey(d => d.ParentChapterId)
