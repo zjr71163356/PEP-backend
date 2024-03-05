@@ -117,7 +117,7 @@ namespace PEP.Controllers
                     ChapterNumber = cc.ChapterNumber,
                     SubChapters = cc.SubChapters.Select(sc => new SubChapter
                     {
-                  
+
                         Title = sc.Title,
                         ParentChapterId = cc.ChapterId,
                         SubChapterNumber = sc.SubChapterNumber,
@@ -128,12 +128,10 @@ namespace PEP.Controllers
 
             };
 
-
-
             await dbContext.Courses.AddAsync(courseDomainModel);
             await dbContext.SaveChangesAsync();
 
-            return Ok( );
+            return Ok(new { CourseId = courseDomainModel.CourseId });
         }
 
         [HttpPut]
@@ -167,7 +165,7 @@ namespace PEP.Controllers
 
 
             await dbContext.SaveChangesAsync();
-            return Ok(updateCourseOneStepDTO);
+            return Ok();
         }
 
         [HttpDelete]
