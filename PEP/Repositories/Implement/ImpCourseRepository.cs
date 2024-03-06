@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.EntityFrameworkCore;
 using PEP.Data;
 using PEP.Models.Domain;
 using PEP.Repositories.Interface;
@@ -48,14 +49,24 @@ namespace PEP.Repositories.Implement
             throw new NotImplementedException();
         }
 
-        public Task<List<Course>> GetAllCoursesListAsync()
+        public async Task<List<Course>> GetAllCoursesListAsync()
         {
-            throw new NotImplementedException();
+            var allcourses = await dbContext.Courses.Include(c => c.CourseTags).ToListAsync();
+            return allcourses;
         }
 
-        public Task<Course?> GetCourseByIdAsync(int courseId)
+        public async Task<Course?> GetCourseByIdAsync(int courseId)
         {
-            throw new NotImplementedException();
+            var course = await dbContext.Courses
+                .Include(c => c.CourseTags)
+                .Include(c => c.CourseChapters)
+                .ThenInclude(cc => cc.SubChapters)
+                .FirstOrDefaultAsync(c => c.CourseId == courseId);
+
+            if (course == null)
+                return null;
+
+            return course;
         }
 
         public Task<List<Course>> GetUserCoursesListAsync(int userId)

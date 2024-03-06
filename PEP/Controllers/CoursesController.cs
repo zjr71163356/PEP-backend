@@ -32,71 +32,23 @@ namespace PEP.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllCoursesList()
         {
-            var allcourses = await dbContext.Courses.Include(c => c.CourseTags).ToListAsync();
-            var allcoursesDTO = new List<CoursesOverviewDTO>();
-            foreach (var course in allcourses)
-            {
-                allcoursesDTO.Add(new CoursesOverviewDTO
-                {
-                    CourseId = course.CourseId,
-                    CourseName = course.CourseName,
-                    ChapterCount = course.ChapterCount,
-                    Introduction = course.Introduction,
-                    ImageUrl = course.ImageUrl,
-                    CourseTags = course.CourseTags.Select(ct => new CoursesTagDTO
-                    {
-                        TagName = ct.TagName,
-                        TagColor = ct.TagColor
-                    }).ToList()
-                });
-            }
-            return Ok(allcoursesDTO);
+            var allCourses = await impCourseRepository.GetAllCoursesListAsync();
+            
+            return Ok(mapper.Map<List<CoursesOverviewDTO>>(allCourses));
         }
 
 
 
         [HttpGet]
         [Route("{courseId:int}")]
-        public async Task<IActionResult> GetCourseById([FromRoute] int courseId)
+        public async Task<IActionResult> GetCourseDescById([FromRoute] int courseId)
         {
-            var course = await dbContext.Courses
-                .Include(c => c.CourseTags)
-                .Include(c => c.CourseChapters)
-
-                .ThenInclude(cc => cc.SubChapters)
-                .FirstOrDefaultAsync(c => c.CourseId == courseId);
+            var course = await  impCourseRepository.GetCourseByIdAsync(courseId);
             if (course == null)
             {
                 return NotFound();
             }
-            var courseDTO = new CourseGetByIdDTO
-            {
-                CourseId = course.CourseId,
-                CourseName = course.CourseName,
-                ChapterCount = course.ChapterCount,
-                Introduction = course.Introduction,
-                ImageUrl = course.ImageUrl,
-                CourseTags = course.CourseTags.Select(ct => new CoursesTagDTO
-                {
-                    TagName = ct.TagName,
-                    TagColor = ct.TagColor
-                }).ToList(),
-                CourseChapters = course.CourseChapters.Select(cc => new PreCoursesChapterDTO
-                {
-                    ChapterId = cc.ChapterId,
-                    CourseId = cc.CourseId,
-                    Title = cc.Title,
-                    ChapterNumber = cc.ChapterNumber,
-                    SubChapters = cc.SubChapters.Select(sc => new PreCoursesSubChapterDTO
-                    {
-                        ParentChapterId = cc.ChapterId,
-                        SubChapterId = sc.SubChapterId,
-                        Title = sc.Title,
-                        SubChapterNumber = sc.SubChapterNumber,
-                        MarkdownContent = sc.MarkdownContent
-                    }).ToList()
-                }).ToList()
-            };
+            mapper.Map<CoursesOverviewDTO>(course);
             return Ok(courseDTO);
         }
         [HttpPost]
@@ -128,33 +80,7 @@ namespace PEP.Controllers
         [Route("StepOne/{courseId:int}")]
         public async Task<IActionResult> UpdateCourseOneStep([FromRoute] int courseId, [FromBody] CoursesStepOneDTO updateCourseOneStepDTO)
         {
-            //var course = await dbContext.Courses
-            //    .Include(c => c.CourseTags)
-            //    .FirstOrDefaultAsync(c => c.CourseId == courseId);
-            //if (course == null)
-            //{
-            //    return NotFound();
-            //}
-            //course.CourseName = updateCourseOneStepDTO.CourseName;
-            //course.ChapterCount = updateCourseOneStepDTO.ChapterCount;
-            //course.Introduction = updateCourseOneStepDTO.Introduction;
-            //course.ImageUrl = updateCourseOneStepDTO.ImageUrl;
 
-            //foreach (var ct in course.CourseTags)
-            //{
-            //    dbContext.CourseTags.Remove(ct);
-            //}
-            //course.CourseTags.Clear();
-
-            //course.CourseTags = updateCourseOneStepDTO.CourseTags.Select(ct => new CourseTag
-            //{
-            //    TagName = ct.TagName,
-            //    TagColor = ct.TagColor
-            //}).ToList();
-
-
-
-            //await dbContext.SaveChangesAsync();
 
             var courseDomainModel = mapper.Map<Course>(updateCourseOneStepDTO);
             var exstingCourseDomainModel = await impCourseRepository.UpdateCourseStepOneAsync(courseId, courseDomainModel);

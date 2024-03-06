@@ -13,6 +13,7 @@ namespace PEP.Mappings
             CreateMap<CoursesStepOneDTO, Course>().ReverseMap();
             CreateMap<CoursesStepTwoDTO, Course>().ReverseMap();
             CreateMap<CoursesTagDTO, CourseTag>().ReverseMap();
+            CreateMap<CoursesOverviewDTO, Course>().ReverseMap();
             CreateMap<AddCoursesChapterDTO, CourseChapter>().ReverseMap();
             CreateMap<AddCoursesSubChapterDTO, SubChapter>().ReverseMap();
         }
