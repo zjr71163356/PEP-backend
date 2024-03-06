@@ -14,10 +14,7 @@ namespace PEP.Repositories.Interface
         Task<Course?> UpdateCourseStepOneAsync(int courseId,Course course);
 
         Task<Course?> UpdateCourseStepTwoAsync(int courseId,Course course);
-        //teacher/admin manage all the courses'properties
-        Task<List<CourseChapter>> AddCourseChapterAsync(List<CourseChapter> courseChapter);
-        Task<CourseChapter?> DeleteCourseChapterByIdAsync(int chapterId);
-        Task<CourseChapter?> UpdateCourseChapterAsync(int chapterId,CourseChapter courseChapter);
+ 
 
 
 

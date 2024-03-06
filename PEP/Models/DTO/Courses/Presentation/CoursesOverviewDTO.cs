@@ -1,4 +1,6 @@
-﻿namespace PEP.Models.DTO.Courses.Presentation
+﻿using PEP.Models.DTO.Courses.Both;
+
+namespace PEP.Models.DTO.Courses.Presentation
 {
     public class CoursesOverviewDTO
     {

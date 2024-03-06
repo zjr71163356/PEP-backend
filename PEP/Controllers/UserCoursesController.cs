@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PEP.Data;
 using PEP.Models.DTO.Courses;
+using PEP.Models.DTO.Courses.Both;
+using PEP.Models.DTO.Courses.Presentation;
 
 namespace PEP.Controllers
 {

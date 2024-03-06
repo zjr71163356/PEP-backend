@@ -1,12 +1,12 @@
-﻿using PEP.Models.DTO.Courses.Add;
-using PEP.Models.DTO.Courses.Presentation;
+﻿using PEP.Models.Domain;
+using PEP.Models.DTO.Courses.Both;
 
-namespace PEP.Models.DTO.Courses
+namespace PEP.Models.DTO.Courses.Presentation
 {
-    public class CourseGetByIdDTO
+    public class CourseDescDTO
     {
- 
         public int CourseId { get; set; }
+
         public string CourseName { get; set; } = null!;
 
         public int ChapterCount { get; set; }
@@ -18,9 +18,5 @@ namespace PEP.Models.DTO.Courses
         public virtual ICollection<PreCoursesChapterDTO> CourseChapters { get; set; } = new List<PreCoursesChapterDTO>();
 
         public virtual ICollection<CoursesTagDTO> CourseTags { get; set; } = new List<CoursesTagDTO>();
-
-        
-
-    
     }
 }

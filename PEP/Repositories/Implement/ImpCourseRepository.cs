@@ -16,14 +16,7 @@ namespace PEP.Repositories.Implement
         }
 
 
-
-        public async Task<List<CourseChapter>> AddCourseChapterAsync(List<CourseChapter> courseChapterList)
-        {
-            await dbContext.CourseChapters.AddRangeAsync(courseChapterList);
-            await dbContext.SaveChangesAsync();
-            return courseChapterList;
-        }
-
+ 
         public async Task<Course> AddCourseAsync(Course course)
         {
             await dbContext.Courses.AddAsync(course);
@@ -31,23 +24,28 @@ namespace PEP.Repositories.Implement
             return course;
         }
 
-        //public async Task<List<CourseChapter>> AddCourseChapterListAsync(List<CourseChapter> courseChapter)
-        //{
-        //    await dbContext.CourseChapters.AddRangeAsync(courseChapter);
-        //    await dbContext.SaveChangesAsync();
-        //    return courseChapter;
 
-        //}
 
-        public Task<Course?> DeleteCourseByIdAsync(int courseId)
+        public async Task<Course?> DeleteCourseByIdAsync(int courseId)
         {
-            throw new NotImplementedException();
+            var course = await dbContext.Courses
+            .Include(c => c.UserCourses)
+            .Include(c => c.CourseTags)
+            .Include(c => c.CourseChapters)
+            .ThenInclude(cc => cc.SubChapters)
+            .FirstOrDefaultAsync(c => c.CourseId == courseId);
+
+            if (course == null)
+            {
+                return null;
+            }
+
+            dbContext.Courses.Remove(course);
+            await dbContext.SaveChangesAsync();
+            return course;
         }
 
-        public Task<CourseChapter?> DeleteCourseChapterByIdAsync(int chapterId)
-        {
-            throw new NotImplementedException();
-        }
+ 
 
         public async Task<List<Course>> GetAllCoursesListAsync()
         {
@@ -74,10 +72,7 @@ namespace PEP.Repositories.Implement
             throw new NotImplementedException();
         }
 
-        public Task<CourseChapter?> UpdateCourseChapterAsync(int chapterId, CourseChapter courseChapter)
-        {
-            throw new NotImplementedException();
-        }
+ 
 
         public async Task<Course?> UpdateCourseStepOneAsync(int courseId, Course course)
         {

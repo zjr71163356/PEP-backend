@@ -33,7 +33,7 @@ namespace PEP.Controllers
         public async Task<IActionResult> GetAllCoursesList()
         {
             var allCourses = await impCourseRepository.GetAllCoursesListAsync();
-            
+
             return Ok(mapper.Map<List<CoursesOverviewDTO>>(allCourses));
         }
 
@@ -43,13 +43,13 @@ namespace PEP.Controllers
         [Route("{courseId:int}")]
         public async Task<IActionResult> GetCourseDescById([FromRoute] int courseId)
         {
-            var course = await  impCourseRepository.GetCourseByIdAsync(courseId);
+            var course = await impCourseRepository.GetCourseByIdAsync(courseId);
             if (course == null)
             {
                 return NotFound();
             }
-          
-            return Ok(mapper.Map<CoursesOverviewDTO>(course));
+
+            return Ok(mapper.Map<CourseDescDTO>(course));
         }
 
         [HttpPost]
@@ -79,7 +79,7 @@ namespace PEP.Controllers
             return Ok(addCourseResultDTO);
         }
 
-        [HttpPost]
+        [HttpPut]
         [Route("UpdateStepOne/{courseId:int}")]
         public async Task<IActionResult> UpdateCourseOneStep([FromRoute] int courseId, [FromBody] CoursesStepOneDTO updateCourseOneStepDTO)
         {
@@ -93,21 +93,10 @@ namespace PEP.Controllers
 
         [HttpDelete]
         [Route("{courseId:int}")]
-        public async Task<IActionResult> deleteCourse([FromRoute] int courseId)
+        public async Task<IActionResult> deleteCourseById([FromRoute] int courseId)
         {
-            var course = await dbContext.Courses
-                .Include(c => c.UserCourses)
-                .Include(c => c.CourseTags)
-                .Include(c => c.CourseChapters)
-                .ThenInclude(cc => cc.SubChapters)
-                .FirstOrDefaultAsync(c => c.CourseId == courseId);
-            if (course == null)
-            {
-                return NotFound();
-            }
-            dbContext.Courses.Remove(course);
-            await dbContext.SaveChangesAsync();
-            return Ok();
+        
+            return Ok(await impCourseRepository.DeleteCourseByIdAsync(courseId));
         }
 
     }

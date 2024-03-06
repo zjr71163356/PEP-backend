@@ -7,7 +7,7 @@ using PEP.Models.DTO.Courses.Presentation;
 
 namespace PEP.Mappings
 {
-    public class AutoMapperProfiles: Profile
+    public class AutoMapperProfiles : Profile
     {
         public AutoMapperProfiles()
         {
@@ -15,6 +15,7 @@ namespace PEP.Mappings
             CreateMap<CoursesStepTwoDTO, Course>().ReverseMap();
             CreateMap<CoursesTagDTO, CourseTag>().ReverseMap();
             CreateMap<CoursesOverviewDTO, Course>().ReverseMap();
+            CreateMap<CourseDescDTO, Course>().ReverseMap();
             CreateMap<AddCoursesChapterDTO, CourseChapter>().ReverseMap();
             CreateMap<AddCoursesSubChapterDTO, SubChapter>().ReverseMap();
         }
