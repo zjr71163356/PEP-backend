@@ -5,8 +5,8 @@ using Microsoft.EntityFrameworkCore;
 using PEP.Data;
 using PEP.Models;
 using PEP.Models.Domain;
-using PEP.Models.DTO.Courses;
 using PEP.Models.DTO.Courses.Add;
+using PEP.Models.DTO.Courses.Both;
 using PEP.Models.DTO.Courses.Presentation;
 using PEP.Repositories.Implement;
 using PEP.Repositories.Interface;
@@ -48,9 +48,10 @@ namespace PEP.Controllers
             {
                 return NotFound();
             }
-            mapper.Map<CoursesOverviewDTO>(course);
-            return Ok(courseDTO);
+          
+            return Ok(mapper.Map<CoursesOverviewDTO>(course));
         }
+
         [HttpPost]
         [Route("AddStepOne")]
         public async Task<IActionResult> AddCourseStepOne([FromBody] CoursesStepOneDTO addCourseStepOneDTO)
@@ -62,6 +63,8 @@ namespace PEP.Controllers
             var addCourseResultDTO = mapper.Map<CoursesStepOneDTO>(exstingcourseDomainModel);
             return Ok(addCourseResultDTO);
         }
+
+
         [HttpPost]
         [Route("AddStepTwo/{courseId:int}")]
         public async Task<IActionResult> AddCourseStepTwo([FromRoute] int courseId, [FromBody] CoursesStepTwoDTO coursesStepTwoDTO)
@@ -77,7 +80,7 @@ namespace PEP.Controllers
         }
 
         [HttpPost]
-        [Route("StepOne/{courseId:int}")]
+        [Route("UpdateStepOne/{courseId:int}")]
         public async Task<IActionResult> UpdateCourseOneStep([FromRoute] int courseId, [FromBody] CoursesStepOneDTO updateCourseOneStepDTO)
         {
 

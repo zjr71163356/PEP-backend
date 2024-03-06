@@ -2,6 +2,7 @@
 using PEP.Models.Domain;
 using PEP.Models.DTO.Courses;
 using PEP.Models.DTO.Courses.Add;
+using PEP.Models.DTO.Courses.Both;
 using PEP.Models.DTO.Courses.Presentation;
 
 namespace PEP.Mappings

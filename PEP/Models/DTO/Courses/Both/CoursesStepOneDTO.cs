@@ -1,6 +1,6 @@
 ﻿using PEP.Models.Domain;
 
-namespace PEP.Models.DTO.Courses
+namespace PEP.Models.DTO.Courses.Both
 {
     public class CoursesStepOneDTO
     {
