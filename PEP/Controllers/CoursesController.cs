@@ -59,9 +59,8 @@ namespace PEP.Controllers
             var courseDomainModel = mapper.Map<Course>(addCourseStepOneDTO);
 
             var exstingcourseDomainModel = await impCourseRepository.AddCourseAsync(courseDomainModel);
-
-            var addCourseResultDTO = mapper.Map<CoursesStepOneDTO>(exstingcourseDomainModel);
-            return Ok(addCourseResultDTO);
+ 
+            return Ok(mapper.Map<CourseDescDTO>(exstingcourseDomainModel) );
         }
 
 
@@ -75,8 +74,8 @@ namespace PEP.Controllers
             {
                 return NotFound();
             }
-            var addCourseResultDTO = mapper.Map<CoursesStepTwoDTO>(exstingCourseDomainModel);
-            return Ok(addCourseResultDTO);
+
+            return Ok(mapper.Map<CourseDescDTO>(exstingCourseDomainModel));
         }
 
         [HttpPut]
@@ -87,16 +86,38 @@ namespace PEP.Controllers
 
             var courseDomainModel = mapper.Map<Course>(updateCourseOneStepDTO);
             var exstingCourseDomainModel = await impCourseRepository.UpdateCourseStepOneAsync(courseId, courseDomainModel);
+            if (exstingCourseDomainModel == null)
+            {
+                return NotFound();
+            }
+            return Ok(mapper.Map<CourseDescDTO>(exstingCourseDomainModel));
+        }
 
-            return Ok(mapper.Map<CoursesStepOneDTO>(exstingCourseDomainModel));
+        [HttpPut]
+        [Route("UpdateStepTwo/{courseId:int}")]
+        public async Task<IActionResult> UpdateCourseTwoStep([FromRoute] int courseId, [FromBody] CoursesStepTwoDTO updateCourseOneStepDTO)
+        {
+
+
+            var courseDomainModel = mapper.Map<Course>(updateCourseOneStepDTO);
+            var exstingCourseDomainModel = await impCourseRepository.UpdateCourseStepTwoAsync(courseId, courseDomainModel);
+            if (exstingCourseDomainModel == null)
+            {
+                return NotFound();
+            }
+            return Ok(mapper.Map<CourseDescDTO>(exstingCourseDomainModel));
         }
 
         [HttpDelete]
         [Route("{courseId:int}")]
         public async Task<IActionResult> deleteCourseById([FromRoute] int courseId)
         {
-        
-            return Ok(await impCourseRepository.DeleteCourseByIdAsync(courseId));
+          var course = await impCourseRepository.DeleteCourseByIdAsync(courseId);
+            if (course == null)
+            {
+                return NotFound();
+            }
+            return Ok(mapper.Map<CourseDescDTO>(course));
         }
 
     }

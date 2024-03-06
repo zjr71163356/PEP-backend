@@ -11,13 +11,19 @@ namespace PEP.Mappings
     {
         public AutoMapperProfiles()
         {
+            CreateMap<CoursesOverviewDTO, Course>().ReverseMap();
             CreateMap<CoursesStepOneDTO, Course>().ReverseMap();
             CreateMap<CoursesStepTwoDTO, Course>().ReverseMap();
-            CreateMap<CoursesTagDTO, CourseTag>().ReverseMap();
-            CreateMap<CoursesOverviewDTO, Course>().ReverseMap();
             CreateMap<CourseDescDTO, Course>().ReverseMap();
+
+            CreateMap<CoursesTagDTO, CourseTag>().ReverseMap();
+
+            
+            CreateMap<PreCoursesChapterDTO, CourseChapter>().ReverseMap();
             CreateMap<AddCoursesChapterDTO, CourseChapter>().ReverseMap();
+
             CreateMap<AddCoursesSubChapterDTO, SubChapter>().ReverseMap();
+            CreateMap<PreCoursesSubChapterDTO, SubChapter>().ReverseMap();
         }
     }
 }
