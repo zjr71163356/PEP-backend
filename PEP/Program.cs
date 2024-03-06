@@ -1,6 +1,9 @@
 using Microsoft.EntityFrameworkCore;
 using PEP;
 using PEP.Data;
+using PEP.Mappings;
+using PEP.Repositories.Implement;
+using PEP.Repositories.Interface;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,7 +15,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<FinalDesignContext>(option =>
     option.UseSqlServer(builder.Configuration.GetConnectionString("PEPString")));
-
+builder.Services.AddScoped<ICourseRepository, ImpCourseRepository>();
+builder.Services.AddAutoMapper(typeof(AutoMapperProfiles));
 var app = builder.Build();
 
 // Enable CORS

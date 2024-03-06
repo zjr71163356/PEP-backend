@@ -1,10 +1,15 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PEP.Data;
 using PEP.Models;
 using PEP.Models.Domain;
 using PEP.Models.DTO.Courses;
+using PEP.Models.DTO.Courses.Add;
+using PEP.Models.DTO.Courses.Presentation;
+using PEP.Repositories.Implement;
+using PEP.Repositories.Interface;
 
 
 namespace PEP.Controllers
@@ -14,10 +19,14 @@ namespace PEP.Controllers
     public class CoursesController : ControllerBase
     {
         private readonly FinalDesignContext dbContext;
+        private readonly ICourseRepository impCourseRepository;
+        private readonly IMapper mapper;
 
-        public CoursesController(FinalDesignContext dbContext)
+        public CoursesController(FinalDesignContext dbContext, ICourseRepository impCourseRepository, IMapper mapper)
         {
             this.dbContext = dbContext;
+            this.impCourseRepository = impCourseRepository;
+            this.mapper = mapper;
         }
 
         [HttpGet]
@@ -72,15 +81,15 @@ namespace PEP.Controllers
                     TagName = ct.TagName,
                     TagColor = ct.TagColor
                 }).ToList(),
-                CourseChapters = course.CourseChapters.Select(cc => new CoursesChapterDTO
+                CourseChapters = course.CourseChapters.Select(cc => new PreCoursesChapterDTO
                 {
                     ChapterId = cc.ChapterId,
                     CourseId = cc.CourseId,
                     Title = cc.Title,
                     ChapterNumber = cc.ChapterNumber,
-                    SubChapters = cc.SubChapters.Select(sc => new CoursesSubChapterDTO
+                    SubChapters = cc.SubChapters.Select(sc => new PreCoursesSubChapterDTO
                     {
-                        CourseId = cc.CourseId,
+                        ParentChapterId = cc.ChapterId,
                         SubChapterId = sc.SubChapterId,
                         Title = sc.Title,
                         SubChapterNumber = sc.SubChapterNumber,
@@ -91,81 +100,66 @@ namespace PEP.Controllers
             return Ok(courseDTO);
         }
         [HttpPost]
-        public async Task<IActionResult> AddCourse([FromBody] CoursesAddDTO addCourseDTO)
+        [Route("AddStepOne")]
+        public async Task<IActionResult> AddCourseStepOne([FromBody] CoursesStepOneDTO addCourseStepOneDTO)
         {
-            foreach (var ct in addCourseDTO.CourseTags)
-            {
-                ct.TagColor = new Random().Next(1, 6);
-            }
+            var courseDomainModel = mapper.Map<Course>(addCourseStepOneDTO);
 
-            var courseDomainModel = new Course
-            {
-                // Add properties for the new course
+            var exstingcourseDomainModel = await impCourseRepository.AddCourseAsync(courseDomainModel);
 
-                CourseName = addCourseDTO.CourseName,
-                ChapterCount = addCourseDTO.ChapterCount,
-                Introduction = addCourseDTO.Introduction,
-                ImageUrl = addCourseDTO.ImageUrl,
-                CourseTags = addCourseDTO.CourseTags.Select(ct => new CourseTag
-                {
-                    TagName = ct.TagName,
-                    TagColor = ct.TagColor
-                }).ToList(),
-                CourseChapters = addCourseDTO.CourseChapters.Select(cc => new CourseChapter
-                {
-                    Title = cc.Title,
-                    ChapterNumber = cc.ChapterNumber,
-                    SubChapters = cc.SubChapters.Select(sc => new SubChapter
-                    {
-
-                        Title = sc.Title,
-                        ParentChapterId = cc.ChapterId,
-                        SubChapterNumber = sc.SubChapterNumber,
-                        ParentChapterNumber = cc.ChapterNumber,
-                        MarkdownContent = sc.MarkdownContent
-                    }).ToList()
-                }).ToList()
-
-            };
-
-            await dbContext.Courses.AddAsync(courseDomainModel);
-            await dbContext.SaveChangesAsync();
-
-            return Ok(new { CourseId = courseDomainModel.CourseId });
+            var addCourseResultDTO = mapper.Map<CoursesStepOneDTO>(exstingcourseDomainModel);
+            return Ok(addCourseResultDTO);
         }
-
-        [HttpPut]
-        [Route("StepOne/{courseId:int}")]
-        public async Task<IActionResult> UpdateCourseOneStep([FromRoute] int courseId, [FromBody] CoursesUpdateOneStepDTO updateCourseOneStepDTO)
+        [HttpPost]
+        [Route("AddStepTwo/{courseId:int}")]
+        public async Task<IActionResult> AddCourseStepTwo([FromRoute] int courseId, [FromBody] CoursesStepTwoDTO coursesStepTwoDTO)
         {
-            var course = await dbContext.Courses
-                .Include(c => c.CourseTags)
-                .FirstOrDefaultAsync(c => c.CourseId == courseId);
-            if (course == null)
+            var courseDomainModel = mapper.Map<Course>(coursesStepTwoDTO);
+            var exstingCourseDomainModel = await impCourseRepository.UpdateCourseStepTwoAsync(courseId, courseDomainModel);
+            if (exstingCourseDomainModel == null)
             {
                 return NotFound();
             }
-            course.CourseName = updateCourseOneStepDTO.CourseName;
-            course.ChapterCount = updateCourseOneStepDTO.ChapterCount;
-            course.Introduction = updateCourseOneStepDTO.Introduction;
-            course.ImageUrl = updateCourseOneStepDTO.ImageUrl;
+            var addCourseResultDTO = mapper.Map<CoursesStepTwoDTO>(exstingCourseDomainModel);
+            return Ok(addCourseResultDTO);
+        }
 
-            foreach (var ct in course.CourseTags)
-            {
-                dbContext.CourseTags.Remove(ct);
-            }
-            course.CourseTags.Clear();
+        [HttpPost]
+        [Route("StepOne/{courseId:int}")]
+        public async Task<IActionResult> UpdateCourseOneStep([FromRoute] int courseId, [FromBody] CoursesStepOneDTO updateCourseOneStepDTO)
+        {
+            //var course = await dbContext.Courses
+            //    .Include(c => c.CourseTags)
+            //    .FirstOrDefaultAsync(c => c.CourseId == courseId);
+            //if (course == null)
+            //{
+            //    return NotFound();
+            //}
+            //course.CourseName = updateCourseOneStepDTO.CourseName;
+            //course.ChapterCount = updateCourseOneStepDTO.ChapterCount;
+            //course.Introduction = updateCourseOneStepDTO.Introduction;
+            //course.ImageUrl = updateCourseOneStepDTO.ImageUrl;
 
-            course.CourseTags = updateCourseOneStepDTO.CourseTags.Select(ct => new CourseTag
-            {
-                TagName = ct.TagName,
-                TagColor = ct.TagColor
-            }).ToList();
+            //foreach (var ct in course.CourseTags)
+            //{
+            //    dbContext.CourseTags.Remove(ct);
+            //}
+            //course.CourseTags.Clear();
+
+            //course.CourseTags = updateCourseOneStepDTO.CourseTags.Select(ct => new CourseTag
+            //{
+            //    TagName = ct.TagName,
+            //    TagColor = ct.TagColor
+            //}).ToList();
 
 
 
-            await dbContext.SaveChangesAsync();
-            return Ok();
+            //await dbContext.SaveChangesAsync();
+
+            var courseDomainModel = mapper.Map<Course>(updateCourseOneStepDTO);
+            var exstingCourseDomainModel = await impCourseRepository.UpdateCourseStepOneAsync(courseId, courseDomainModel);
+
+            return Ok(mapper.Map<CoursesStepOneDTO>(exstingCourseDomainModel));
         }
 
         [HttpDelete]
