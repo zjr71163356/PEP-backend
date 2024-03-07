@@ -20,6 +20,6 @@ namespace PEP.Repositories.Interface
 
         //user manage user's courses
         Task<List<Course>> GetUserCoursesListAsync(int userId);
-
+        Task<SubChapter?> GetSubChapterById(int subChapterId);
     }
 }

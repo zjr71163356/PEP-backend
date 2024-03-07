@@ -16,7 +16,7 @@ namespace PEP.Repositories.Implement
         }
 
 
- 
+
         public async Task<Course> AddCourseAsync(Course course)
         {
             await dbContext.Courses.AddAsync(course);
@@ -45,7 +45,7 @@ namespace PEP.Repositories.Implement
             return course;
         }
 
- 
+
 
         public async Task<List<Course>> GetAllCoursesListAsync()
         {
@@ -67,12 +67,22 @@ namespace PEP.Repositories.Implement
             return course;
         }
 
+        public async Task<SubChapter?> GetSubChapterById(int subChapterId)
+        {
+            var subChapter = await dbContext.SubChapters.FirstOrDefaultAsync(sc => sc.SubChapterId == subChapterId);
+            if (subChapter == null)
+            {
+                return null;
+            }
+            return subChapter;
+        }
+
         public Task<List<Course>> GetUserCoursesListAsync(int userId)
         {
             throw new NotImplementedException();
         }
 
- 
+
 
         public async Task<Course?> UpdateCourseStepOneAsync(int courseId, Course course)
         {

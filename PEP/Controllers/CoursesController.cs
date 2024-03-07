@@ -40,8 +40,8 @@ namespace PEP.Controllers
 
 
         [HttpGet]
-        [Route("{courseId:int}")]
-        public async Task<IActionResult> GetCourseDescById([FromRoute] int courseId)
+        [Route("CourseDesc")]
+        public async Task<IActionResult> GetCourseDescById([FromQuery] int courseId)
         {
             var course = await impCourseRepository.GetCourseByIdAsync(courseId);
             if (course == null)
@@ -51,6 +51,19 @@ namespace PEP.Controllers
 
             return Ok(mapper.Map<CourseDescDTO>(course));
         }
+        [HttpGet]
+        [Route("CourseSubChapters")]
+        public async Task<IActionResult> GetCourseSubChaptersMDContent([FromQuery] int subChapterId)
+        {
+            var courseSubChapter= await impCourseRepository.GetSubChapterById(subChapterId);
+            if (courseSubChapter == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(mapper.Map<SubChapterMDContentDTO>(courseSubChapter));
+        }
+
 
         [HttpPost]
         [Route("AddStepOne")]
@@ -59,8 +72,8 @@ namespace PEP.Controllers
             var courseDomainModel = mapper.Map<Course>(addCourseStepOneDTO);
 
             var exstingcourseDomainModel = await impCourseRepository.AddCourseAsync(courseDomainModel);
- 
-            return Ok(mapper.Map<CourseDescDTO>(exstingcourseDomainModel) );
+
+            return Ok(mapper.Map<CourseDescDTO>(exstingcourseDomainModel));
         }
 
 
@@ -112,7 +125,7 @@ namespace PEP.Controllers
         [Route("{courseId:int}")]
         public async Task<IActionResult> deleteCourseById([FromRoute] int courseId)
         {
-          var course = await impCourseRepository.DeleteCourseByIdAsync(courseId);
+            var course = await impCourseRepository.DeleteCourseByIdAsync(courseId);
             if (course == null)
             {
                 return NotFound();

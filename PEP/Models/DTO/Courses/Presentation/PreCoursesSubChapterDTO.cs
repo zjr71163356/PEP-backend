@@ -12,6 +12,6 @@
 
         public string Title { get; set; } = null!;
 
-        public string MarkdownContent { get; set; } = null!;
+   
     }
 }
