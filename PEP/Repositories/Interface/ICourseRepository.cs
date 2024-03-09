@@ -1,11 +1,12 @@
-﻿using PEP.Models.Domain;
+﻿using Microsoft.AspNetCore.Mvc;
+using PEP.Models.Domain;
 
 namespace PEP.Repositories.Interface
 {
     public interface ICourseRepository
     {
         //teacher/admin manage all the courses
-        Task<List<Course>> GetAllCoursesListAsync();
+        Task<List<Course>> GetAllCoursesListAsync([FromQuery] string? fitlerQuery, [FromQuery] int pageNumber, [FromQuery] int? pageSize);
         Task<Course?> GetCourseByIdAsync(int courseId);
 
         Task<Course> AddCourseAsync(Course course);

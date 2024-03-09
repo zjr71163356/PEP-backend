@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PEP.Data;
 using PEP.Models.Domain;
@@ -47,10 +48,26 @@ namespace PEP.Repositories.Implement
 
 
 
-        public async Task<List<Course>> GetAllCoursesListAsync()
+        public async Task<List<Course>> GetAllCoursesListAsync([FromQuery] string? fitlerQuery, [FromQuery] int pageNumber, [FromQuery] int? pageSize)
         {
-            var allcourses = await dbContext.Courses.Include(c => c.CourseTags).ToListAsync();
-            return allcourses;
+
+            var allQueryCourses = dbContext.Courses.Include(c => c.CourseTags).AsQueryable();
+
+
+            if (!string.IsNullOrEmpty(fitlerQuery))
+            {
+                fitlerQuery = fitlerQuery.Trim();
+                allQueryCourses = allQueryCourses.Where(c => c.CourseName.Contains(fitlerQuery));
+            }
+            if (pageSize == null)
+            {
+                return await allQueryCourses.ToListAsync();
+            }
+            else
+            {
+                int skipResult = (pageNumber - 1) * pageSize.Value;
+                return await allQueryCourses.Skip(skipResult).Take(pageSize.Value).ToListAsync();
+            }
         }
 
         public async Task<Course?> GetCourseByIdAsync(int courseId)

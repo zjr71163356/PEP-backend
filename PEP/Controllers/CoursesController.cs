@@ -18,21 +18,21 @@ namespace PEP.Controllers
     [ApiController]
     public class CoursesController : ControllerBase
     {
-        private readonly FinalDesignContext dbContext;
+ 
         private readonly ICourseRepository impCourseRepository;
         private readonly IMapper mapper;
 
-        public CoursesController(FinalDesignContext dbContext, ICourseRepository impCourseRepository, IMapper mapper)
+        public CoursesController( ICourseRepository impCourseRepository, IMapper mapper)
         {
-            this.dbContext = dbContext;
+ 
             this.impCourseRepository = impCourseRepository;
             this.mapper = mapper;
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllCoursesList()
+        public async Task<IActionResult> GetAllCoursesList([FromQuery] string? fitlerQuery=null, [FromQuery] int pageNumber=1, [FromQuery] int? pageSize=null)
         {
-            var allCourses = await impCourseRepository.GetAllCoursesListAsync();
+            var allCourses = await impCourseRepository.GetAllCoursesListAsync(fitlerQuery, pageNumber, pageSize);
 
             return Ok(mapper.Map<List<CoursesOverviewDTO>>(allCourses));
         }
@@ -55,7 +55,7 @@ namespace PEP.Controllers
         [Route("CourseSubChapters")]
         public async Task<IActionResult> GetCourseSubChaptersMDContent([FromQuery] int subChapterId)
         {
-            var courseSubChapter= await impCourseRepository.GetSubChapterById(subChapterId);
+            var courseSubChapter = await impCourseRepository.GetSubChapterById(subChapterId);
             if (courseSubChapter == null)
             {
                 return NotFound();

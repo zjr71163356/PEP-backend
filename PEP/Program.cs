@@ -16,6 +16,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<FinalDesignContext>(option =>
     option.UseSqlServer(builder.Configuration.GetConnectionString("PEPString")));
 builder.Services.AddScoped<ICourseRepository, ImpCourseRepository>();
+builder.Services.AddScoped<IUserRepository, ImpUserRepository>();
 builder.Services.AddAutoMapper(typeof(AutoMapperProfiles));
 var app = builder.Build();
 
