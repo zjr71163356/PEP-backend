@@ -18,13 +18,24 @@ namespace PEP.Repositories.Implement
 
         public async Task<bool> IsUserAccountTakenAsync(string userAccount)
         {
-          return await dbContext.Users.AnyAsync(u => u.Account == userAccount);
+            return await dbContext.Users.AnyAsync(u => u.Account == userAccount);
         }
 
         public async Task<bool> IsUsernameTakenAsync(string username)
         {
             return await dbContext.Users.AnyAsync(u => u.UserName == username);
         }
+
+        public async Task<User?> LoginUserAsync(User user)
+        {
+            var loginResult = await dbContext.Users.FirstOrDefaultAsync(u => u.Account == user.Account && u.Password == user.Password);
+            if (loginResult == null)
+            {
+                return null;
+            }
+            return loginResult;
+        }
+
         public async Task<bool> RegisterUserAsync(User userRegister)
         {
             userRegister.Role = "User";

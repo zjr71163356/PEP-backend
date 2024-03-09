@@ -5,6 +5,7 @@ using PEP.Models.Domain;
 using PEP.Models.DTO.User;
 using PEP.Repositories.Implement;
 using PEP.Repositories.Interface;
+using System.Data;
 
 namespace PEP.Controllers
 {
@@ -36,12 +37,25 @@ namespace PEP.Controllers
 
 
         }
+        [HttpPost]
+        [Route("Login")]
+        public async Task<IActionResult> Login([FromForm] UserLoginDTO userLoginDTO)
+        {
+            var user = mapper.Map<User>(userLoginDTO);
+            var loginUser = await impUserRepository.LoginUserAsync(user);
+            var loginUserDTO = mapper.Map<UserLoginDTO>(loginUser);
+            if (loginUserDTO == null) { return BadRequest(new UserLoginDTO { }); }
+
+            return Ok(new UserLoginDTO { Role=loginUserDTO.Role});
+
+        }
+
         [HttpGet]
         [Route("isUserNameRepeat")]
         public async Task<IActionResult> isUserNameRepeat([FromQuery] string userName)
         {
             var isUserNameRepeat = await impUserRepository.IsUsernameTakenAsync(userName);
-             
+
 
             return Ok(new { userName, isUserNameRepeat });
 

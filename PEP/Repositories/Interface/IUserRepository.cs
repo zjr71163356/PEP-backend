@@ -10,5 +10,7 @@ namespace PEP.Repositories.Interface
         Task<bool> IsUsernameTakenAsync(string username);
 
         Task<bool> IsUserAccountTakenAsync(string userAccount);
+
+        Task<User?> LoginUserAsync(User user);
     }
 }
