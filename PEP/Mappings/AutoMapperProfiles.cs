@@ -33,6 +33,12 @@ namespace PEP.Mappings
 
             CreateMap<UserRegisterDTO, User>().ReverseMap();
             CreateMap<UserLoginDTO, User>().ReverseMap();
+            CreateMap<UserLoginResultDTO, User>().ReverseMap();
+
+            CreateMap<UserCourseAddDTO, UserCourse>().ReverseMap();
+             
+
+
         }
     }
 }

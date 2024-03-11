@@ -81,7 +81,7 @@ namespace PEP.Repositories.Implement
             return subChapter;
         }
 
-        public async Task<List<Course>> GetAllCoursesListAsync([FromQuery] string? fitlerQuery, [FromQuery] int pageNumber, [FromQuery] int? pageSize)
+        public async Task<List<Course>> GetAllCoursesListAsync(string? fitlerQuery, int pageNumber, int? pageSize)
         {
 
             var allQueryCourses = dbContext.Courses.Include(c => c.CourseTags).AsQueryable();

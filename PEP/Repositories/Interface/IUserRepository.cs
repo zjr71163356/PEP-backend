@@ -1,4 +1,5 @@
-﻿using PEP.Models.Domain;
+﻿using Microsoft.AspNetCore.Mvc;
+using PEP.Models.Domain;
 using PEP.Models.DTO.User;
 
 namespace PEP.Repositories.Interface
@@ -12,5 +13,14 @@ namespace PEP.Repositories.Interface
         Task<bool> IsUserAccountTakenAsync(string userAccount);
 
         Task<User?> LoginUserAsync(User user);
+
+        Task<List<Course>?> GetUserCoursesListAsync(int userId);
+
+        Task<UserCourse?> AddUserCourseToMyList(UserCourse userCourse);
+
+        Task<bool> IsUserCourseRepeat(int userId,int courseId);
+
+        Task<UserCourse?> RemoveCourseFromMyList(int userId,int courseId);
+
     }
 }

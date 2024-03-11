@@ -6,7 +6,7 @@ namespace PEP.Repositories.Interface
     public interface ICourseRepository
     {
         //teacher/admin manage all the courses
-        Task<List<Course>> GetAllCoursesListAsync([FromQuery] string? fitlerQuery, [FromQuery] int pageNumber, [FromQuery] int? pageSize);
+        Task<List<Course>> GetAllCoursesListAsync( string? fitlerQuery,   int pageNumber, int? pageSize);
         Task<Course?> GetCourseByIdAsync(int courseId);
 
         Task<Course> AddCourseAsync(Course course);
