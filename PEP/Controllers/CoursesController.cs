@@ -19,19 +19,19 @@ namespace PEP.Controllers
     [ApiController]
     public class CoursesController : ControllerBase
     {
- 
+
         private readonly ICourseRepository impCourseRepository;
         private readonly IMapper mapper;
 
-        public CoursesController( ICourseRepository impCourseRepository, IMapper mapper)
+        public CoursesController(ICourseRepository impCourseRepository, IMapper mapper)
         {
- 
+
             this.impCourseRepository = impCourseRepository;
             this.mapper = mapper;
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllCoursesList([FromQuery] string? fitlerQuery=null, [FromQuery] int pageNumber=1, [FromQuery] int? pageSize=null)
+        public async Task<IActionResult> GetAllCoursesList([FromQuery] string? fitlerQuery = null, [FromQuery] int pageNumber = 1, [FromQuery] int? pageSize = null)
         {
             var allCourses = await impCourseRepository.GetAllCoursesListAsync(fitlerQuery, pageNumber, pageSize);
 
@@ -91,9 +91,24 @@ namespace PEP.Controllers
 
             return Ok(mapper.Map<CourseDescDTO>(exstingCourseDomainModel));
         }
+
+        [HttpPost]
+        [Route("AddCourseChapter")]
+        public async Task<IActionResult> AddCourseChapter([FromBody] AddCoursesChapterByCourseIdDTO addCoursesChapterByCourseIdDTO)
+        {
+            var courseChapterDomainModel = mapper.Map<CourseChapter>(addCoursesChapterByCourseIdDTO);
+            var exstingCourseDomainModel = await impCourseRepository.AddChapter(courseChapterDomainModel);
+            if (exstingCourseDomainModel == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(mapper.Map<PreCoursesChapterDTO>(exstingCourseDomainModel));
+        }
+
         [HttpPost]
         [Route("AddSubChapter")]
-        public async Task<IActionResult> AddSubChapter(  [FromBody] AddCoursesSubChapterByChapterIdDTO addCoursesSubChapterDTO)
+        public async Task<IActionResult> AddSubChapter([FromBody] AddCoursesSubChapterByChapterIdDTO addCoursesSubChapterDTO)
         {
             var subChapterDomainModel = mapper.Map<SubChapter>(addCoursesSubChapterDTO);
             var exstingCourseDomainModel = await impCourseRepository.AddSubChapter(subChapterDomainModel);
@@ -102,7 +117,7 @@ namespace PEP.Controllers
                 return NotFound();
             }
 
-            return Ok(mapper.Map<PreCoursesSubChapterDTO>(exstingCourseDomainModel));
+            return Ok(mapper.Map<PreCoursesSubChapterWithMDDTO>(exstingCourseDomainModel));
         }
 
 
@@ -141,8 +156,8 @@ namespace PEP.Controllers
         public async Task<IActionResult> UpdateSubChapter([FromRoute] int subchapterId, [FromBody] AddCoursesSubChapterDTO updateSubChapter)
         {
 
-            var subChapter= mapper.Map<SubChapter>(updateSubChapter);
- 
+            var subChapter = mapper.Map<SubChapter>(updateSubChapter);
+
             var updatedSubChapter = await impCourseRepository.UpdateSubChapter(subchapterId, subChapter);
             if (updatedSubChapter == null)
                 return NotFound();
@@ -150,6 +165,19 @@ namespace PEP.Controllers
             return Ok(mapper.Map<AddCoursesSubChapterDTO>(updatedSubChapter));
         }
 
+        [HttpPut]
+        [Route("UpdateSubChapterMDcontent/{subchapterId:int}")]
+        public async Task<IActionResult> UpdateSubChapterMDcontent([FromRoute] int subchapterId, [FromBody] SubChapterMDContentDTO updateSubChapter)
+        {
+
+            var subChapter = mapper.Map<SubChapter>(updateSubChapter);
+
+            var updatedSubChapter = await impCourseRepository.UpdateSubChapterMDcontent(subchapterId, subChapter);
+            if (updatedSubChapter == null)
+                return NotFound();
+
+            return Ok(mapper.Map<PreCoursesSubChapterWithMDDTO>(updatedSubChapter));
+        }
 
 
 
@@ -177,6 +205,18 @@ namespace PEP.Controllers
                 return NotFound();
             }
             return Ok(mapper.Map<PreCoursesSubChapterDTO>(subChapter));
+        }
+
+        [HttpDelete]
+        [Route("CourseChapter/{ChapterId:int}")]
+        public async Task<IActionResult> CourseChapter([FromRoute] int ChapterId)
+        {
+            var Chapter = await impCourseRepository.DeleteChapterById(ChapterId);
+            if (Chapter == null)
+            {
+                return NotFound();
+            }
+            return Ok(mapper.Map<PreCoursesChapterDTO>(Chapter));
         }
     }
 }

@@ -16,7 +16,12 @@ namespace PEP.Repositories.Implement
             this.dbContext = dbContext;
         }
 
-
+        public async Task<CourseChapter?> AddChapter(CourseChapter chapter)
+        {
+            await dbContext.CourseChapters.AddAsync(chapter);
+            await dbContext.SaveChangesAsync();
+            return chapter;
+        }
 
         public async Task<Course> AddCourseAsync(Course course)
         {
@@ -31,6 +36,18 @@ namespace PEP.Repositories.Implement
             await dbContext.SaveChangesAsync();
 
             return subChapter;
+        }
+
+        public async Task<CourseChapter?> DeleteChapterById(int chapter)
+        {
+            var existingCourseChapter = await dbContext.CourseChapters.Include(cc=>cc.SubChapters).FirstOrDefaultAsync(cc => cc.ChapterId == chapter);
+            if (existingCourseChapter == null)
+            {
+                return null;
+            }
+            dbContext.CourseChapters.Remove(existingCourseChapter);
+            await dbContext.SaveChangesAsync();
+            return existingCourseChapter;
         }
 
         public async Task<Course?> DeleteCourseByIdAsync(int courseId)
@@ -87,6 +104,17 @@ namespace PEP.Repositories.Implement
             }
         }
 
+        public async Task<CourseChapter?> GetChapterById(int chapterId)
+        {
+        var existingCourseChapter =await dbContext.CourseChapters.FirstOrDefaultAsync(cc => cc.ChapterId == chapterId);
+            if (existingCourseChapter == null)
+            {
+            return null;
+            }
+
+            return existingCourseChapter;
+        }
+
         public async Task<Course?> GetCourseByIdAsync(int courseId)
         {
             var course = await dbContext.Courses
@@ -116,7 +144,19 @@ namespace PEP.Repositories.Implement
             throw new NotImplementedException();
         }
 
-
+        public async Task<CourseChapter?> UpdateChapter(int chapterId, CourseChapter chapter)
+        {
+         var existingCourseChapter =await dbContext.CourseChapters.Include(cc=>cc.SubChapters).FirstOrDefaultAsync(cc=>cc.ChapterId== chapterId);
+            if (existingCourseChapter == null)
+            {
+                return null;
+            }
+            existingCourseChapter.ChapterNumber = chapter.ChapterNumber;
+            existingCourseChapter.Title = chapter.Title;
+            existingCourseChapter.SubChapters = chapter.SubChapters;
+            await dbContext.SaveChangesAsync();
+            return existingCourseChapter;
+        }
 
         public async Task<Course?> UpdateCourseStepOneAsync(int courseId, Course course)
         {
@@ -136,15 +176,40 @@ namespace PEP.Repositories.Implement
             return existingCourse;
         }
 
-        public async Task<Course?> UpdateCourseStepTwoAsync(int courseId, Course course)
+        public async Task<Course?> UpdateCourseStepTwoAsync(int courseId, Course updatedCourse)
         {
-            var existingCourse = await dbContext.Courses.FirstOrDefaultAsync(c => c.CourseId == courseId);
+            var existingCourse = await dbContext.Courses
+               .Include(c => c.CourseChapters)
+                   .ThenInclude(cc => cc.SubChapters)
+               .FirstOrDefaultAsync(c => c.CourseId == courseId);
+
             if (existingCourse == null)
             {
                 return null;
             }
 
-            existingCourse.CourseChapters = course.CourseChapters;
+        
+            // 遍历更新 CourseChapter 的 title 字段
+            foreach (var updatedChapter in updatedCourse.CourseChapters)
+            {
+                var existingChapter = existingCourse.CourseChapters.FirstOrDefault(cc => cc.ChapterId == updatedChapter.ChapterId);
+
+                if (existingChapter != null)
+                {
+                    existingChapter.Title = updatedChapter.Title;
+
+                    // 遍历更新 SubChapter 的 title 字段
+                    foreach (var updatedSubChapter in updatedChapter.SubChapters)
+                    {
+                        var existingSubChapter = existingChapter.SubChapters.FirstOrDefault(sc => sc.SubChapterId == updatedSubChapter.SubChapterId);
+
+                        if (existingSubChapter != null)
+                        {
+                            existingSubChapter.Title = updatedSubChapter.Title;
+                        }
+                    }
+                }
+            }
 
             await dbContext.SaveChangesAsync();
             return existingCourse;
@@ -165,5 +230,14 @@ namespace PEP.Repositories.Implement
             return exsitingSubChapter;
         }
 
+        public async Task<SubChapter?> UpdateSubChapterMDcontent(int subChapterId, SubChapter subChapter)
+        {
+            var existingSubChapter = await dbContext.SubChapters.FirstOrDefaultAsync(c => c.SubChapterId == subChapterId);
+            if (existingSubChapter == null)
+                return null;
+            existingSubChapter.MarkdownContent = subChapter.MarkdownContent;
+            await dbContext.SaveChangesAsync();
+            return existingSubChapter;
+        }
     }
 }

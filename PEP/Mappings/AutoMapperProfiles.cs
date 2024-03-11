@@ -22,6 +22,8 @@ namespace PEP.Mappings
 
             CreateMap<PreCoursesChapterDTO, CourseChapter>().ReverseMap();
             CreateMap<AddCoursesChapterDTO, CourseChapter>().ReverseMap();
+            CreateMap<AddCoursesChapterByCourseIdDTO, CourseChapter>().ReverseMap();
+
 
             CreateMap<AddCoursesSubChapterDTO, SubChapter>().ReverseMap();
             CreateMap<AddCoursesSubChapterByChapterIdDTO, SubChapter>().ReverseMap();

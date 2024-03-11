@@ -22,10 +22,19 @@ namespace PEP.Repositories.Interface
         //user manage user's courses
         Task<List<Course>> GetUserCoursesListAsync(int userId);
 
+
         //teacher/admin manage course's chapters
+
+        Task<CourseChapter?> GetChapterById(int chapterId);
+        Task<CourseChapter?> UpdateChapter(int chapterId,CourseChapter chapter);
+        Task<CourseChapter?> AddChapter(CourseChapter chapter);
+        Task<CourseChapter?> DeleteChapterById(int chapter);
+
+
+        //teacher/admin manage course's subchapters
         Task<SubChapter?> GetSubChapterById(int subChapterId);
         Task<SubChapter?> UpdateSubChapter(int subChapterId,SubChapter subChapter);
-
+        Task<SubChapter?> UpdateSubChapterMDcontent(int subChapterId, SubChapter subChapter);
         Task<SubChapter?> AddSubChapter(SubChapter subChapter);
 
         Task<SubChapter?> DeleteSubChapterById(int subChapterId);
