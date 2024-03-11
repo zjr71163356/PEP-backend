@@ -15,12 +15,20 @@ namespace PEP.Repositories.Interface
         Task<Course?> UpdateCourseStepOneAsync(int courseId,Course course);
 
         Task<Course?> UpdateCourseStepTwoAsync(int courseId,Course course);
- 
+        
 
 
 
         //user manage user's courses
         Task<List<Course>> GetUserCoursesListAsync(int userId);
+
+        //teacher/admin manage course's chapters
         Task<SubChapter?> GetSubChapterById(int subChapterId);
+        Task<SubChapter?> UpdateSubChapter(int subChapterId,SubChapter subChapter);
+
+        Task<SubChapter?> AddSubChapter(SubChapter subChapter);
+
+        Task<SubChapter?> DeleteSubChapterById(int subChapterId);
+
     }
 }

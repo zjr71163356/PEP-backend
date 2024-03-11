@@ -25,7 +25,13 @@ namespace PEP.Repositories.Implement
             return course;
         }
 
+        public async Task<SubChapter?> AddSubChapter(SubChapter subChapter)
+        {
+            await dbContext.SubChapters.AddAsync(subChapter);
+            await dbContext.SaveChangesAsync();
 
+            return subChapter;
+        }
 
         public async Task<Course?> DeleteCourseByIdAsync(int courseId)
         {
@@ -46,7 +52,17 @@ namespace PEP.Repositories.Implement
             return course;
         }
 
-
+        public async Task<SubChapter?> DeleteSubChapterById(int subChapterId)
+        {
+            var subChapter = await dbContext.SubChapters.FirstOrDefaultAsync(s => s.SubChapterId == subChapterId);
+            if (subChapter == null)
+            {
+                return null;
+            }
+            dbContext.SubChapters.Remove(subChapter);
+            await dbContext.SaveChangesAsync();
+            return subChapter;
+        }
 
         public async Task<List<Course>> GetAllCoursesListAsync([FromQuery] string? fitlerQuery, [FromQuery] int pageNumber, [FromQuery] int? pageSize)
         {
@@ -59,6 +75,7 @@ namespace PEP.Repositories.Implement
                 fitlerQuery = fitlerQuery.Trim();
                 allQueryCourses = allQueryCourses.Where(c => c.CourseName.Contains(fitlerQuery));
             }
+
             if (pageSize == null)
             {
                 return await allQueryCourses.ToListAsync();
@@ -103,7 +120,7 @@ namespace PEP.Repositories.Implement
 
         public async Task<Course?> UpdateCourseStepOneAsync(int courseId, Course course)
         {
-            var existingCourse = await dbContext.Courses.FirstOrDefaultAsync(c => c.CourseId == courseId);
+            var existingCourse = await dbContext.Courses.Include(c => c.CourseTags).FirstOrDefaultAsync(c => c.CourseId == courseId);
             if (existingCourse == null)
             {
                 return null;
@@ -132,5 +149,21 @@ namespace PEP.Repositories.Implement
             await dbContext.SaveChangesAsync();
             return existingCourse;
         }
+
+        public async Task<SubChapter?> UpdateSubChapter(int subChapterId, SubChapter subChapter)
+        {
+
+            var exsitingSubChapter = await dbContext.SubChapters.FirstOrDefaultAsync(c => c.SubChapterId == subChapterId);
+            if (exsitingSubChapter == null)
+            {
+                return null;
+            }
+            exsitingSubChapter.SubChapterNumber = subChapter.SubChapterNumber;
+            exsitingSubChapter.Title = subChapter.Title;
+            exsitingSubChapter.MarkdownContent = subChapter.MarkdownContent;
+            await dbContext.SaveChangesAsync();
+            return exsitingSubChapter;
+        }
+
     }
 }

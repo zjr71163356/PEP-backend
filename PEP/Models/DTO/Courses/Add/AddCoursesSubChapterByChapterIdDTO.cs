@@ -1,17 +1,12 @@
-﻿namespace PEP.Models.DTO.Courses.Presentation
+﻿namespace PEP.Models.DTO.Courses.Add
 {
-    public class PreCoursesSubChapterDTO
+    public class AddCoursesSubChapterByChapterIdDTO
     {
-
-        public int SubChapterId { get; set; }
-
         public int ParentChapterId { get; set; }
-
-
         public decimal SubChapterNumber { get; set; }
 
         public string Title { get; set; } = null!;
-    
 
+        public string MarkdownContent { get; set; } = null!;
     }
 }
