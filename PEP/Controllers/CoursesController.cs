@@ -52,6 +52,8 @@ namespace PEP.Controllers
 
             return Ok(mapper.Map<CourseDescDTO>(course));
         }
+
+
         [HttpGet]
         [Route("CourseSubChapters")]
         public async Task<IActionResult> GetCourseSubChapters([FromQuery] int subChapterId)
