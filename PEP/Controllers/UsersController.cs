@@ -43,6 +43,24 @@ namespace PEP.Controllers
 
 
         [HttpPost]
+        [Route("AddUserSubmission")]
+        public async Task<IActionResult> AddUserSubmission([FromBody] UserSubmissionAddDTO userSubmissionAddDTO)
+        {
+            var submissionRecord = mapper.Map<SubmissionRecord>(userSubmissionAddDTO);
+            var result = await impUserRepository.AddSubmissionRecord(submissionRecord);
+
+            if (result == null)
+            {
+                return BadRequest("添加失败");
+            }
+
+            return Ok(mapper.Map<SubmissionRecord>(result));
+
+
+        }
+
+
+        [HttpPost]
         [Route("Register")]
         public async Task<IActionResult> Register([FromForm] UserRegisterDTO userRegisterDTO)
         {
@@ -123,6 +141,18 @@ namespace PEP.Controllers
                 return NotFound();
             }
             return Ok(mapper.Map<UserCourseAddDTO>(result));
+
+        }
+        [HttpGet]
+        [Route("GetUserSubmission/{userId:int}")]
+        public async Task<IActionResult> GetUserSubmission([FromRoute] int userId)
+        {
+            var result = await impUserRepository.GetSubmissionRecordsByUserId(userId);
+            if (result == null)
+            {
+                return NotFound();
+            }
+            return Ok(mapper.Map<List<UserSubmissionAddDTO>>(result));
 
         }
     }

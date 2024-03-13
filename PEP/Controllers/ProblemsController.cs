@@ -42,6 +42,20 @@ namespace PEP.Controllers
         }
 
         [HttpGet]
+        [Route("GetTestData/{testId:int}")]
+        public async Task<IActionResult> GetTestData([FromRoute] int testId)
+        {
+            var allProblemTestData = await impProblemRepository.GetTestDataByIdAsync(testId);
+
+            if (allProblemTestData == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(mapper.Map< ProblemTestDataDTO >(allProblemTestData));
+        }
+
+        [HttpGet]
         [Route("GetProblemById")]
         public async Task<IActionResult> GetProblemById([FromQuery] int problemId)
         {
@@ -63,6 +77,17 @@ namespace PEP.Controllers
             return Ok(mapper.Map<ProblemDescDTO>(result));
         }
 
+
+        [HttpPost]
+        [Route("AddTestData")]
+        public async Task<IActionResult> AddTestData([FromBody] ProblemTestDataAddDTO problemTestDataAddDTO)
+        {
+            var testData = mapper.Map<TestDatum>(problemTestDataAddDTO);
+            var result = await impProblemRepository.AddTestDataAsync(testData);
+
+            return Ok(mapper.Map<ProblemTestDataDTO>(result));
+        }
+
         [HttpDelete]
         [Route("DeleteProblem")]
         public async Task<IActionResult> DeleteProblem([FromQuery] int problemId)
@@ -77,6 +102,46 @@ namespace PEP.Controllers
             return Ok(mapper.Map<ProblemAddDTO>(result));
         }
 
+        [HttpDelete]
+        [Route("DeleteTestData/{testId:int}")]
+        public async Task<IActionResult> DeleteTestData([FromRoute] int testId)
+        {
 
+            var result = await impProblemRepository.DeleteTestDataByIdAsync(testId);
+            if (result == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(mapper.Map<ProblemTestDataDTO>(result));
+        }
+        
+        [HttpPut]
+        [Route("UpdateTestData/{testId:int}")]
+        public async Task<IActionResult> UpdateTestData([FromRoute] int testId, [FromBody] ProblemTestDataAddDTO problemUpdateTestDataDTO)
+        {
+            var testData = mapper.Map<TestDatum>(problemUpdateTestDataDTO);
+            var result = await impProblemRepository.UpdateTestDataAsync(testId, testData);
+            if (result == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(mapper.Map<ProblemTestDataDTO>(result));
+        }
+
+        [HttpPut]
+        [Route("UpdateProblemStepOne/{problemId:int}")]
+        public async Task<IActionResult> UpdateProblemStepOne([FromRoute] int problemId, [FromBody] ProblemAddDTO problemUpdateStepOneDTO)
+        {
+            var problem = mapper.Map<AlgorithmProblem>(problemUpdateStepOneDTO);
+            var result = await impProblemRepository.UpdateAlgorithmProblemStepOneAsync(problemId, problem);
+            if (result == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(mapper.Map<ProblemDescDTO>(result));
+        }
     }
 }

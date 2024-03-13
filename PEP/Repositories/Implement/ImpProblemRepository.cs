@@ -79,7 +79,7 @@ namespace PEP.Repositories.Implement
 
         public async Task<AlgorithmProblem?> GetProblemByIdAsync(int problemId)
         {
-            var existingProblem = await dbContext.AlgorithmProblems.FirstOrDefaultAsync(p => p.ProblemId == problemId);
+            var existingProblem = await dbContext.AlgorithmProblems.Include(p=>p.ProblemTags).FirstOrDefaultAsync(p => p.ProblemId == problemId);
             if (existingProblem == null)
             {
                 return null;
@@ -134,6 +134,19 @@ namespace PEP.Repositories.Implement
         public Task<AlgorithmProblem?> UpdateAlgorithmProblemStepTwoAsync(int problemId, AlgorithmProblem problem)
         {
             throw new NotImplementedException();
+        }
+
+        public async Task<TestDatum?> UpdateTestDataAsync(int dataId, TestDatum testdata)
+        {
+           var existingTestData=await dbContext.TestData.FirstOrDefaultAsync(td=>td.TestDataId==dataId);
+            if(existingTestData==null)
+            {
+                return null;
+            }
+            existingTestData.InputData = testdata.InputData;
+            existingTestData.OutputData=testdata.OutputData;
+            await dbContext.SaveChangesAsync();
+            return existingTestData;
         }
     }
 }

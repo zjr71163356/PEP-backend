@@ -16,6 +16,13 @@ namespace PEP.Repositories.Implement
             this.dbContext = dbContext;
         }
 
+        public async Task<SubmissionRecord?> AddSubmissionRecord(SubmissionRecord submission)
+        {
+            await dbContext.SubmissionRecords.AddAsync(submission);
+            await dbContext.SaveChangesAsync();
+            return submission;
+        }
+
         public async Task<UserCourse?> AddUserCourseToMyList(UserCourse userCourse)
         {
             var existingUserCourse = await dbContext.UserCourses.FirstOrDefaultAsync(uc => uc.UserId == userCourse.UserId && uc.CourseId == userCourse.CourseId);
@@ -28,6 +35,16 @@ namespace PEP.Repositories.Implement
             }
 
             return null;
+        }
+
+        public async Task<List<SubmissionRecord>?> GetSubmissionRecordsByUserId(int userId)
+        {
+            var submissionRecords = await dbContext.SubmissionRecords.Where(s => s.UserId == userId).ToListAsync();
+            if (submissionRecords.Count == 0)
+            {
+                return null;
+            }
+            return submissionRecords;
         }
 
         public async Task<List<Course>?> GetUserCoursesListAsync(int userId)

@@ -22,5 +22,8 @@ namespace PEP.Repositories.Interface
 
         Task<UserCourse?> RemoveCourseFromMyList(int userId,int courseId);
 
+        Task<SubmissionRecord?> AddSubmissionRecord(SubmissionRecord submission);
+
+        Task<List<SubmissionRecord>?> GetSubmissionRecordsByUserId(int userId);
     }
 }

@@ -16,6 +16,7 @@ namespace PEP.Repositories.Interface
 
         Task<AlgorithmProblem?> UpdateAlgorithmProblemStepTwoAsync(int problemId, AlgorithmProblem problem);
 
+        Task<TestDatum?>UpdateTestDataAsync(int dataId, TestDatum testdata);
 
         Task<List<TestDatum>?> GetProblemTestDataByProblemIdAsync(int problemId);
         Task<TestDatum?> GetTestDataByIdAsync(int dataId);
