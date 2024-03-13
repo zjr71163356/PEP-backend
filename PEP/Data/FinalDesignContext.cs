@@ -169,9 +169,7 @@ public partial class FinalDesignContext : DbContext
                 .HasMaxLength(255)
                 .IsUnicode(false)
                 .HasColumnName("avatar_imgurl");
-            entity.Property(e => e.PostContent)
-                .HasColumnType("text")
-                .HasColumnName("post_content");
+            entity.Property(e => e.PostContent).HasColumnName("post_content");
             entity.Property(e => e.PostTime)
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime")
@@ -264,9 +262,7 @@ public partial class FinalDesignContext : DbContext
             entity.ToTable("sub_chapters");
 
             entity.Property(e => e.SubChapterId).HasColumnName("sub_chapter_id");
-            entity.Property(e => e.MarkdownContent)
-                .HasColumnType("text")
-                .HasColumnName("markdown_content");
+            entity.Property(e => e.MarkdownContent).HasColumnName("markdown_content");
             entity.Property(e => e.ParentChapterId).HasColumnName("parent_chapter_id");
             entity.Property(e => e.ParentChapterNumber).HasColumnName("parent_chapter_number");
             entity.Property(e => e.SubChapterNumber)
@@ -284,16 +280,12 @@ public partial class FinalDesignContext : DbContext
 
         modelBuilder.Entity<SubmissionRecord>(entity =>
         {
-            entity.HasKey(e => e.RecordId).HasName("PK__records__BFCFB4DD8379D7F1");
+            entity.HasKey(e => e.RecordId).HasName("PK__tmp_ms_x__BFCFB4DD68476F48");
 
             entity.ToTable("submission_records");
 
-            entity.Property(e => e.RecordId)
-                .ValueGeneratedNever()
-                .HasColumnName("record_id");
-            entity.Property(e => e.Code)
-                .HasColumnType("text")
-                .HasColumnName("code");
+            entity.Property(e => e.RecordId).HasColumnName("record_id");
+            entity.Property(e => e.Code).HasColumnName("code");
             entity.Property(e => e.Compiler)
                 .HasMaxLength(255)
                 .IsUnicode(false)
@@ -326,12 +318,12 @@ public partial class FinalDesignContext : DbContext
             entity.HasOne(d => d.Problem).WithMany(p => p.SubmissionRecords)
                 .HasForeignKey(d => d.ProblemId)
                 .OnDelete(DeleteBehavior.Cascade)
-                .HasConstraintName("FK__submissio__probl__3552E9B6");
+                .HasConstraintName("FK__submissio__probl__54CB950F");
 
             entity.HasOne(d => d.User).WithMany(p => p.SubmissionRecords)
                 .HasForeignKey(d => d.UserId)
                 .OnDelete(DeleteBehavior.Cascade)
-                .HasConstraintName("FK__submissio__user___36470DEF");
+                .HasConstraintName("FK__submissio__user___55BFB948");
         });
 
         modelBuilder.Entity<TestDatum>(entity =>

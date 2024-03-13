@@ -54,7 +54,7 @@ namespace PEP.Controllers
                 return BadRequest("添加失败");
             }
 
-            return Ok(mapper.Map<SubmissionRecord>(result));
+            return Ok(mapper.Map<UserSubmissionAddDTO>(result));
 
 
         }
@@ -131,6 +131,33 @@ namespace PEP.Controllers
 
         }
 
+        [HttpGet]
+        [Route("GetUserSubmission")]
+        public async Task<IActionResult> GetUserSubmission([FromQuery] int userId, [FromQuery] int? problemId, [FromQuery] int pageNumber = 1, [FromQuery] int? pageSize = null)
+        {
+            var result = await impUserRepository.GetSubmissionRecords(userId, problemId, pageNumber, pageSize);
+            if (result == null)
+            {
+                return NotFound();
+            }
+            return Ok(mapper.Map<List<UserSubmissionPreDTO>>(result));
+
+        }
+
+        [HttpGet]
+        [Route("GetSubmissionRecordById/{recordId:int}")]
+        public async Task<IActionResult> GetSubmissionRecordById([FromRoute] int recordId)
+        {
+            var result = await impUserRepository.GetSubmissionRecordById(recordId);
+            if (result == null)
+            {
+                return NotFound();
+            }
+            return Ok(mapper.Map<UserSubmissionPreDTO>(result));
+
+        }
+
+    
         [HttpDelete]
         [Route("RemoveCourseFromMyList")]
         public async Task<IActionResult> RemoveCourseFromMyList([FromQuery] int userId, [FromQuery] int courseId)
@@ -141,18 +168,6 @@ namespace PEP.Controllers
                 return NotFound();
             }
             return Ok(mapper.Map<UserCourseAddDTO>(result));
-
-        }
-        [HttpGet]
-        [Route("GetUserSubmission/{userId:int}")]
-        public async Task<IActionResult> GetUserSubmission([FromRoute] int userId)
-        {
-            var result = await impUserRepository.GetSubmissionRecordsByUserId(userId);
-            if (result == null)
-            {
-                return NotFound();
-            }
-            return Ok(mapper.Map<List<UserSubmissionAddDTO>>(result));
 
         }
     }

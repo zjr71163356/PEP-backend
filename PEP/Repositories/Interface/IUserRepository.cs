@@ -24,6 +24,9 @@ namespace PEP.Repositories.Interface
 
         Task<SubmissionRecord?> AddSubmissionRecord(SubmissionRecord submission);
 
-        Task<List<SubmissionRecord>?> GetSubmissionRecordsByUserId(int userId);
+        Task<List<SubmissionRecord>?> GetSubmissionRecords(  int userId, int? problemId,int pageNumber = 1, int? pageSize = null);
+
+        Task<SubmissionRecord?> GetSubmissionRecordById(int recordId);
+
     }
 }

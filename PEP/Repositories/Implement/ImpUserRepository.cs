@@ -3,6 +3,7 @@ using PEP.Data;
 using PEP.Models.Domain;
 using PEP.Models.DTO.User;
 using PEP.Repositories.Interface;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace PEP.Repositories.Implement
 {
@@ -37,14 +38,39 @@ namespace PEP.Repositories.Implement
             return null;
         }
 
-        public async Task<List<SubmissionRecord>?> GetSubmissionRecordsByUserId(int userId)
+        public async Task<SubmissionRecord?> GetSubmissionRecordById(int recordId)
         {
-            var submissionRecords = await dbContext.SubmissionRecords.Where(s => s.UserId == userId).ToListAsync();
-            if (submissionRecords.Count == 0)
-            {
+            var result = await dbContext.SubmissionRecords.FirstOrDefaultAsync(s => s.RecordId == recordId);
+            if (result == null)
                 return null;
+
+            return result;
+
+        }
+
+        public async Task<List<SubmissionRecord>?> GetSubmissionRecords(int userId, int? problemId, int pageNumber = 1, int? pageSize = null)
+        {
+            var allSubmissionRecords = dbContext.SubmissionRecords.Where(s => s.UserId == userId).AsQueryable();
+
+
+            if (problemId != null)
+            {
+                allSubmissionRecords = allSubmissionRecords.Where(s => s.ProblemId == problemId);
             }
-            return submissionRecords;
+
+
+            if (pageSize == null)
+            {
+                return await allSubmissionRecords.ToListAsync();
+            }
+            else
+            {
+                int skipResult = (pageNumber - 1) * pageSize.Value;
+                return await allSubmissionRecords.Skip(skipResult).Take(pageSize.Value).ToListAsync();
+            }
+
+
+
         }
 
         public async Task<List<Course>?> GetUserCoursesListAsync(int userId)

@@ -59,7 +59,8 @@ namespace PEP.Mappings
 
 
             CreateMap<UserSubmissionAddDTO, SubmissionRecord>().ReverseMap();
-            
+            CreateMap<UserSubmissionPreDTO, SubmissionRecord>().ReverseMap();
+             
 
         }
     }
