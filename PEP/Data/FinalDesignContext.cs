@@ -353,6 +353,10 @@ public partial class FinalDesignContext : DbContext
 
             entity.ToTable("users");
 
+            entity.HasIndex(e => e.Account, "UQ_Account").IsUnique();
+
+            entity.HasIndex(e => e.UserName, "UQ_UserName").IsUnique();
+
             entity.Property(e => e.UserId).HasColumnName("user_id");
             entity.Property(e => e.Account)
                 .HasMaxLength(50)

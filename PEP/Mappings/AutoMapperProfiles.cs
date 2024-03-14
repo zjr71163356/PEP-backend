@@ -57,10 +57,18 @@ namespace PEP.Mappings
             CreateMap<ProblemTestDataDTO, TestDatum>().ReverseMap();
             CreateMap<ProblemTestDataAddDTO, TestDatum>().ReverseMap();
 
-
+            // about SubmissionRecord
             CreateMap<UserSubmissionAddDTO, SubmissionRecord>().ReverseMap();
             CreateMap<UserSubmissionPreDTO, SubmissionRecord>().ReverseMap();
-             
+
+            //about User
+            CreateMap<UserAddDTO, User>().ReverseMap();
+            CreateMap<UserPreDTO, User>().ReverseMap();
+            
+
+
+
+
 
         }
     }

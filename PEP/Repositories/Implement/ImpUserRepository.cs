@@ -23,6 +23,13 @@ namespace PEP.Repositories.Implement
             return submission;
         }
 
+        public async Task<User?> AddUser(User user)
+        {
+            await dbContext.Users.AddAsync(user);
+            await dbContext.SaveChangesAsync();
+            return user;
+        }
+
         public async Task<UserCourse?> AddUserCourseToMyList(UserCourse userCourse)
         {
             var existingUserCourse = await dbContext.UserCourses.FirstOrDefaultAsync(uc => uc.UserId == userCourse.UserId && uc.CourseId == userCourse.CourseId);
@@ -65,6 +72,18 @@ namespace PEP.Repositories.Implement
             }
         }
 
+        public async Task<User?> GetUserById(int userId)
+        {
+            var user = await dbContext.Users.FirstOrDefaultAsync(u => u.UserId == userId);
+
+            if (user == null)
+            {
+                return null;
+            }
+
+            return user;
+        }
+
         public async Task<List<Course>?> GetUserCoursesListAsync(int userId)
         {
             var userCourseList = await dbContext.UserCourses
@@ -79,6 +98,26 @@ namespace PEP.Repositories.Implement
             }
 
             return userCourseList.Select(uc => uc.Course).ToList();
+        }
+
+        public async Task<List<User>?> GetUserList(string? fitlerQuery, int pageNumber = 1, int? pageSize = null)
+        {
+          var UserList  =  dbContext.Users.AsQueryable();
+            if (!string.IsNullOrEmpty(fitlerQuery))
+            {
+                fitlerQuery = fitlerQuery.Trim();
+                UserList = UserList.Where(u => u.UserName.Contains(fitlerQuery));
+            }
+
+            if (pageSize == null)
+            {
+                return await UserList.ToListAsync();
+            }
+            else
+            {
+                int skipResult = (pageNumber - 1) * pageSize.Value;
+                return await UserList.Skip(skipResult).Take(pageSize.Value).ToListAsync();
+            }
         }
 
         public async Task<bool> IsUserAccountTakenAsync(string userAccount)
@@ -129,6 +168,51 @@ namespace PEP.Repositories.Implement
             dbContext.UserCourses.Remove(existingUserCourse);
             await dbContext.SaveChangesAsync();
             return existingUserCourse;
+        }
+
+        public async Task<User?> RemoveUser(int userId)
+        {
+            var existingUser = await dbContext.Users.FirstOrDefaultAsync(u => u.UserId == userId);
+            if (existingUser == null)
+            {
+                return null;
+            }
+
+            dbContext.Users.Remove(existingUser);
+            await dbContext.SaveChangesAsync();
+            return existingUser;
+        }
+
+        public async Task<User?> UpdateUserById(int userId, User user)
+        {
+            var existingUser = await dbContext.Users.FirstOrDefaultAsync(u => u.UserId == userId);
+            if (existingUser == null)
+            {
+                return null;
+            }
+
+
+            //public string UserName { get; set; } = null!;
+
+            //public string Account { get; set; } = null!;
+
+            //public string Password { get; set; } = null!;
+
+            //public string? Avatar { get; set; }
+
+            //public string Role { get; set; } = null!;
+
+
+            existingUser.UserName = user.UserName;
+            existingUser.Account = user.Account;
+            existingUser.Password = user.Password;
+            existingUser.Avatar = user.Avatar;
+            existingUser.Role = user.Role;
+
+            await dbContext.SaveChangesAsync();
+            return existingUser;
+
+
         }
     }
 

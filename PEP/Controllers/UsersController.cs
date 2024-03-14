@@ -23,6 +23,15 @@ namespace PEP.Controllers
             this.mapper = mapper;
         }
 
+        [HttpPost]
+        [Route("AddUser")]
+        public async Task<IActionResult> AddUser([FromBody] UserAddDTO userAddDTO)
+        {
+            var user = mapper.Map<User>(userAddDTO);
+            var result= await impUserRepository.AddUser(user);
+            return Ok(mapper.Map<UserPreDTO>(result));
+
+        }
 
         [HttpPost]
         [Route("AddUserCourse")]
@@ -109,6 +118,16 @@ namespace PEP.Controllers
 
         }
 
+
+        [HttpGet]
+        [Route("isUserCourseRepeat")]
+        public async Task<IActionResult> isUserCourseRepeat([FromQuery] int userId, [FromQuery] int courseId)
+        {
+            var result = await impUserRepository.IsUserCourseRepeat(userId, courseId);
+            return Ok(result);
+
+        }
+
         [HttpGet]
         [Route("GetUserCourseList/{userId:int}")]
         public async Task<IActionResult> GetUserCoursesList([FromRoute] int userId)
@@ -122,14 +141,6 @@ namespace PEP.Controllers
 
         }
 
-        [HttpGet]
-        [Route("isUserCourseRepeat")]
-        public async Task<IActionResult> isUserCourseRepeat([FromQuery] int userId, [FromQuery] int courseId)
-        {
-            var result = await impUserRepository.IsUserCourseRepeat(userId, courseId);
-            return Ok(result);
-
-        }
 
         [HttpGet]
         [Route("GetUserSubmission")]
@@ -157,7 +168,47 @@ namespace PEP.Controllers
 
         }
 
-    
+        [HttpGet]
+        [Route("GetUserById/{userId:int}")]
+        public async Task<IActionResult> GetUserById([FromRoute] int userId)
+        {
+            var result = await impUserRepository.GetUserById(userId);
+            if (result == null)
+            {
+                return NotFound();
+            }
+            return Ok(mapper.Map<UserPreDTO>(result));
+
+        }
+
+        [HttpGet]
+        [Route("GetUserList")]
+        public async Task<IActionResult> GetUserList(int pageNumber = 1, int? pageSize = null)
+        {
+            var result = await impUserRepository.GetUserList(pageNumber, pageSize);
+            if (result == null)
+            {
+                return NotFound();
+            }
+            return Ok(mapper.Map<List<UserPreDTO>>(result));
+
+        }
+
+        [HttpPut]
+        [Route("UpdateUser/{userId:int}")]
+        public async Task<IActionResult> UpdateUser([FromRoute] int userId, [FromBody] UserAddDTO userUpdateDTO)
+        {
+            var user = mapper.Map<User>(userUpdateDTO);
+            var result = await impUserRepository.UpdateUserById(userId, user);
+            if (result == null)
+            {
+                return NotFound();
+            }
+            return Ok(mapper.Map<UserPreDTO>(result));
+
+        }
+
+
         [HttpDelete]
         [Route("RemoveCourseFromMyList")]
         public async Task<IActionResult> RemoveCourseFromMyList([FromQuery] int userId, [FromQuery] int courseId)
@@ -170,5 +221,19 @@ namespace PEP.Controllers
             return Ok(mapper.Map<UserCourseAddDTO>(result));
 
         }
+
+        [HttpDelete]
+        [Route("RemoveUser")]
+        public async Task<IActionResult> RemoveUser([FromQuery] int userId)
+        {
+            var result = await impUserRepository.RemoveUser(userId);
+            if (result == null)
+            {
+                return NotFound();
+            }
+            return Ok(mapper.Map<UserPreDTO>(result));
+
+        }
+
     }
 }
