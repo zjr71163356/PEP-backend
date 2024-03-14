@@ -2,6 +2,7 @@
 {
     public class UserSubmissionAddDTO
     {
+
         public int ProblemId { get; set; }
 
         public int UserId { get; set; }
@@ -10,18 +11,18 @@
 
         public string Title { get; set; } = null!;
 
-        public string ResultState { get; set; } = null!;
+        public string? ResultState { get; set; }
 
         public string Compiler { get; set; } = null!;
 
-        public int Memory { get; set; }
+        public decimal? Memory { get; set; }
 
-        public decimal Runtime { get; set; }
+        public decimal? Runtime { get; set; }
 
-        public DateTime SubmitTime { get; set; }
+        public string SubmitTime { get; set; } = null!;
 
-        public string Code { get; set; } = null!;
+        public string? Code { get; set; }
 
-        public string CompilerOutput { get; set; } = null!;
+        public string? CompilerOutput { get; set; }
     }
 }

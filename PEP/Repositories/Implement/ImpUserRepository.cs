@@ -13,7 +13,6 @@ namespace PEP.Repositories.Implement
 
         public ImpUserRepository(FinalDesignContext dbContext)
         {
-
             this.dbContext = dbContext;
         }
 
@@ -29,7 +28,6 @@ namespace PEP.Repositories.Implement
             var existingUserCourse = await dbContext.UserCourses.FirstOrDefaultAsync(uc => uc.UserId == userCourse.UserId && uc.CourseId == userCourse.CourseId);
             if (existingUserCourse == null)
             {
-
                 await dbContext.UserCourses.AddAsync(userCourse);
                 await dbContext.SaveChangesAsync();
                 return userCourse;
@@ -45,32 +43,26 @@ namespace PEP.Repositories.Implement
                 return null;
 
             return result;
-
         }
 
         public async Task<List<SubmissionRecord>?> GetSubmissionRecords(int userId, int? problemId, int pageNumber = 1, int? pageSize = null)
         {
             var allSubmissionRecords = dbContext.SubmissionRecords.Where(s => s.UserId == userId).AsQueryable();
 
-
             if (problemId != null)
             {
                 allSubmissionRecords = allSubmissionRecords.Where(s => s.ProblemId == problemId);
             }
 
-
             if (pageSize == null)
             {
-                return await allSubmissionRecords.ToListAsync();
+                return await allSubmissionRecords.OrderByDescending(s => s.RecordId).ToListAsync();
             }
             else
             {
                 int skipResult = (pageNumber - 1) * pageSize.Value;
-                return await allSubmissionRecords.Skip(skipResult).Take(pageSize.Value).ToListAsync();
+                return await allSubmissionRecords.OrderByDescending(s => s.RecordId).Skip(skipResult).Take(pageSize.Value).ToListAsync();
             }
-
-
-
         }
 
         public async Task<List<Course>?> GetUserCoursesListAsync(int userId)

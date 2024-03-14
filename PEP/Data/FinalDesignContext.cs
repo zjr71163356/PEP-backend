@@ -293,17 +293,20 @@ public partial class FinalDesignContext : DbContext
             entity.Property(e => e.CompilerOutput)
                 .HasColumnType("text")
                 .HasColumnName("compiler_output");
-            entity.Property(e => e.Memory).HasColumnName("memory");
+            entity.Property(e => e.Memory)
+                .HasColumnType("decimal(5, 2)")
+                .HasColumnName("memory");
             entity.Property(e => e.ProblemId).HasColumnName("problem_id");
             entity.Property(e => e.ResultState)
                 .HasMaxLength(255)
                 .IsUnicode(false)
                 .HasColumnName("result_state");
             entity.Property(e => e.Runtime)
-                .HasColumnType("decimal(5, 2)")
+                .HasColumnType("decimal(7, 4)")
                 .HasColumnName("runtime");
             entity.Property(e => e.SubmitTime)
-                .HasColumnType("datetime")
+                .HasMaxLength(255)
+                .IsUnicode(false)
                 .HasColumnName("submit_time");
             entity.Property(e => e.Title)
                 .HasMaxLength(255)
