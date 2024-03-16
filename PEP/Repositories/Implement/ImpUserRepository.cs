@@ -72,6 +72,12 @@ namespace PEP.Repositories.Implement
             }
         }
 
+        public async Task<string?> GetUserAvatar(int userId)
+        {
+            var avatar = await dbContext.Users.Where(u => u.UserId == userId).Select(u => u.Avatar).FirstOrDefaultAsync();
+            return avatar;
+        }
+
         public async Task<User?> GetUserById(int userId)
         {
             var user = await dbContext.Users.FirstOrDefaultAsync(u => u.UserId == userId);
@@ -102,7 +108,7 @@ namespace PEP.Repositories.Implement
 
         public async Task<List<User>?> GetUserList(string? fitlerQuery, int pageNumber = 1, int? pageSize = null)
         {
-          var UserList  =  dbContext.Users.AsQueryable();
+            var UserList = dbContext.Users.AsQueryable();
             if (!string.IsNullOrEmpty(fitlerQuery))
             {
                 fitlerQuery = fitlerQuery.Trim();
@@ -118,6 +124,12 @@ namespace PEP.Repositories.Implement
                 int skipResult = (pageNumber - 1) * pageSize.Value;
                 return await UserList.Skip(skipResult).Take(pageSize.Value).ToListAsync();
             }
+        }
+
+        public async Task<string?> GetUserNameById(int userId)
+        {
+            var userName = await dbContext.Users.Where(u => u.UserId == userId).Select(u => u.UserName).FirstOrDefaultAsync();
+            return userName;
         }
 
         public async Task<bool> IsUserAccountTakenAsync(string userAccount)
@@ -150,12 +162,12 @@ namespace PEP.Repositories.Implement
             return loginResult;
         }
 
-        public async Task<bool> RegisterUserAsync(User userRegister)
+        public async Task<User?> RegisterUserAsync(User userRegister)
         {
-            userRegister.Role = "User";
+            userRegister.Role = "student";
             await dbContext.Users.AddAsync(userRegister);
             await dbContext.SaveChangesAsync();
-            return true;
+            return userRegister;
         }
 
         public async Task<UserCourse?> RemoveCourseFromMyList(int userId, int courseId)
@@ -192,15 +204,7 @@ namespace PEP.Repositories.Implement
             }
 
 
-            //public string UserName { get; set; } = null!;
 
-            //public string Account { get; set; } = null!;
-
-            //public string Password { get; set; } = null!;
-
-            //public string? Avatar { get; set; }
-
-            //public string Role { get; set; } = null!;
 
 
             existingUser.UserName = user.UserName;

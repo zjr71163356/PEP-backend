@@ -19,9 +19,7 @@ public partial class Reply
 
     public string ReplyContent { get; set; } = null!;
 
-    public DateTime Timestamp { get; set; }
-
-    public string? AvatarImgurl { get; set; }
+    public string Timestamp { get; set; } = null!;
 
     public virtual Comment Comment { get; set; } = null!;
 

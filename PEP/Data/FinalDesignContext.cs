@@ -74,9 +74,6 @@ public partial class FinalDesignContext : DbContext
             entity.ToTable("comments");
 
             entity.Property(e => e.CommentId).HasColumnName("comment_id");
-            entity.Property(e => e.AvatarImgurl)
-                .HasMaxLength(255)
-                .HasColumnName("avatar_imgurl");
             entity.Property(e => e.CommentContent).HasColumnName("comment_content");
             entity.Property(e => e.FromUserId).HasColumnName("from_user_id");
             entity.Property(e => e.FromUsername)
@@ -84,7 +81,7 @@ public partial class FinalDesignContext : DbContext
                 .HasColumnName("from_username");
             entity.Property(e => e.PostId).HasColumnName("post_id");
             entity.Property(e => e.Timestamp)
-                .HasColumnType("datetime")
+                .HasMaxLength(255)
                 .HasColumnName("timestamp");
 
             entity.HasOne(d => d.FromUser).WithMany(p => p.Comments)
@@ -165,14 +162,10 @@ public partial class FinalDesignContext : DbContext
             entity.ToTable("posts");
 
             entity.Property(e => e.PostId).HasColumnName("post_id");
-            entity.Property(e => e.AvatarImgurl)
-                .HasMaxLength(255)
-                .IsUnicode(false)
-                .HasColumnName("avatar_imgurl");
             entity.Property(e => e.PostContent).HasColumnName("post_content");
             entity.Property(e => e.PostTime)
                 .HasDefaultValueSql("(getdate())")
-                .HasColumnType("datetime")
+                .HasColumnType("smalldatetime")
                 .HasColumnName("post_time");
             entity.Property(e => e.PostType).HasColumnName("post_type");
             entity.Property(e => e.ProblemId).HasColumnName("problem_id");
@@ -180,10 +173,6 @@ public partial class FinalDesignContext : DbContext
                 .HasMaxLength(255)
                 .HasColumnName("title");
             entity.Property(e => e.UserId).HasColumnName("user_id");
-            entity.Property(e => e.UserName)
-                .HasMaxLength(255)
-                .IsUnicode(false)
-                .HasColumnName("user_name");
 
             entity.HasOne(d => d.Problem).WithMany(p => p.Posts)
                 .HasForeignKey(d => d.ProblemId)
@@ -222,9 +211,6 @@ public partial class FinalDesignContext : DbContext
             entity.ToTable("replies");
 
             entity.Property(e => e.ReplyId).HasColumnName("reply_id");
-            entity.Property(e => e.AvatarImgurl)
-                .HasMaxLength(255)
-                .HasColumnName("avatar_imgurl");
             entity.Property(e => e.CommentId).HasColumnName("comment_id");
             entity.Property(e => e.FromUserId).HasColumnName("from_user_id");
             entity.Property(e => e.FromUsername)
@@ -232,7 +218,7 @@ public partial class FinalDesignContext : DbContext
                 .HasColumnName("from_username");
             entity.Property(e => e.ReplyContent).HasColumnName("reply_content");
             entity.Property(e => e.Timestamp)
-                .HasColumnType("datetime")
+                .HasMaxLength(255)
                 .HasColumnName("timestamp");
             entity.Property(e => e.ToUserId).HasColumnName("to_user_id");
             entity.Property(e => e.ToUsername)

@@ -18,6 +18,8 @@ builder.Services.AddDbContext<FinalDesignContext>(option =>
 builder.Services.AddScoped<ICourseRepository, ImpCourseRepository>();
 builder.Services.AddScoped<IUserRepository, ImpUserRepository>();
 builder.Services.AddScoped<IProblemRepository, ImpProblemRepository>();
+builder.Services.AddScoped<IPostRepository, ImpPostRepository>();
+
 builder.Services.AddAutoMapper(typeof(AutoMapperProfiles));
 var app = builder.Build();
 

@@ -11,15 +11,11 @@ public partial class Post
 
     public int UserId { get; set; }
 
-    public string UserName { get; set; } = null!;
-
     public DateTime PostTime { get; set; }
 
     public string PostContent { get; set; } = null!;
 
     public bool PostType { get; set; }
-
-    public string? AvatarImgurl { get; set; }
 
     public int ProblemId { get; set; }
 

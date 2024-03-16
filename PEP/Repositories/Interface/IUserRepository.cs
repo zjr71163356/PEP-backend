@@ -6,7 +6,7 @@ namespace PEP.Repositories.Interface
 {
     public interface IUserRepository
     {
-        Task<bool> RegisterUserAsync(User user);
+        Task<User?> RegisterUserAsync(User user);
 
         Task<bool> IsUsernameTakenAsync(string username);
 
@@ -38,5 +38,7 @@ namespace PEP.Repositories.Interface
 
         Task<User?> GetUserById(int userId);
 
+        Task<string?> GetUserNameById(int userId);
+        Task<string?> GetUserAvatar(int userId);
     }
 }

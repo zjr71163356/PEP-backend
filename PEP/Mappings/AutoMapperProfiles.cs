@@ -4,6 +4,7 @@ using PEP.Models.DTO.Courses;
 using PEP.Models.DTO.Courses.Add;
 using PEP.Models.DTO.Courses.Both;
 using PEP.Models.DTO.Courses.Presentation;
+using PEP.Models.DTO.Post;
 using PEP.Models.DTO.Problems;
 using PEP.Models.DTO.User;
 
@@ -64,8 +65,12 @@ namespace PEP.Mappings
             //about User
             CreateMap<UserAddDTO, User>().ReverseMap();
             CreateMap<UserPreDTO, User>().ReverseMap();
-            
 
+            //about Post
+            CreateMap<PostsOverviewDTO, Post>().ReverseMap();
+            CreateMap<PostAddDTO, Post>().ReverseMap();
+            CreateMap<PostUpdateDTO, Post>().ReverseMap();
+            
 
 
 

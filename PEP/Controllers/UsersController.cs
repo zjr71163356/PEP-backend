@@ -28,7 +28,7 @@ namespace PEP.Controllers
         public async Task<IActionResult> AddUser([FromBody] UserAddDTO userAddDTO)
         {
             var user = mapper.Map<User>(userAddDTO);
-            var result= await impUserRepository.AddUser(user);
+            var result = await impUserRepository.AddUser(user);
             return Ok(mapper.Map<UserPreDTO>(result));
 
         }
@@ -80,10 +80,18 @@ namespace PEP.Controllers
                 return BadRequest("用户名重复");
             }
             var user = mapper.Map<User>(userRegisterDTO);
-            return Ok(await impUserRepository.RegisterUserAsync(user));
+            var result = await impUserRepository.RegisterUserAsync(user);
+            if (result == null)
+            {
+                return BadRequest("注册失败");
+            }
+
+
+            return Ok(mapper.Map<UserPreDTO>(result));
 
 
         }
+
         [HttpPost]
         [Route("Login")]
         public async Task<IActionResult> Login([FromForm] UserLoginDTO userLoginDTO)
@@ -180,17 +188,43 @@ namespace PEP.Controllers
             return Ok(mapper.Map<UserPreDTO>(result));
 
         }
+        [HttpGet]
+        [Route("GetUserAvatar/{userId:int}")]
+        public async Task<IActionResult> GetUserAvatar([FromRoute] int userId)
+        {
+            var result = await impUserRepository.GetUserAvatar(userId);
+            if (result == null)
+            {
+                return NotFound();
+            }
+            return Ok(result);
+
+        }
+
 
         [HttpGet]
         [Route("GetUserList")]
-        public async Task<IActionResult> GetUserList(int pageNumber = 1, int? pageSize = null)
+        public async Task<IActionResult> GetUserList(string? fitlerQuery, int pageNumber = 1, int? pageSize = null)
         {
-            var result = await impUserRepository.GetUserList(pageNumber, pageSize);
+            var result = await impUserRepository.GetUserList(fitlerQuery, pageNumber, pageSize);
             if (result == null)
             {
                 return NotFound();
             }
             return Ok(mapper.Map<List<UserPreDTO>>(result));
+
+        }
+        
+        [HttpGet]
+        [Route("GetUserNameById")]
+        public async Task<IActionResult> GetUserNameById([FromQuery] int userId)
+        {
+            var result = await impUserRepository.GetUserNameById(userId);
+            if (result == null)
+            {
+                return NotFound();
+            }
+            return Ok(result);
 
         }
 
