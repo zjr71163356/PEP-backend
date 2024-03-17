@@ -14,7 +14,7 @@ namespace PEP.Controllers
         private readonly IPostRepository impPostRepository;
         private readonly IMapper mapper;
 
-        
+
         public PostsController(IPostRepository impPostRepository, IMapper mapper)
         {
             this.impPostRepository = impPostRepository;
@@ -23,7 +23,7 @@ namespace PEP.Controllers
 
         [HttpGet]
         [Route("GetAllPostsListByProblemId")]
-        public async Task<IActionResult> GetAllPostsListByProblemId([FromQuery]bool isSolution, [FromQuery] int problemId, [FromQuery] int pageNumber, [FromQuery] int? pageSize)
+        public async Task<IActionResult> GetAllPostsListByProblemId([FromQuery] bool isSolution, [FromQuery] int problemId, [FromQuery] int pageNumber, [FromQuery] int? pageSize)
         {
             var allPosts = await impPostRepository.GetPostsListByProblemIdAsync(isSolution, problemId, pageNumber, pageSize);
             return Ok(mapper.Map<List<PostsOverviewDTO>>(allPosts));
@@ -38,9 +38,19 @@ namespace PEP.Controllers
             return Ok(mapper.Map<PostsOverviewDTO>(result));
         }
 
+        [HttpPost]
+        [Route("AddComment")]
+        public async Task<IActionResult> AddComment([FromBody] PostCommentAddDTO addCommentDTO)
+        {
+            var comment = mapper.Map<Comment>(addCommentDTO);
+            var result = await impPostRepository.AddCommentAsync(comment);
+            return Ok(mapper.Map<PostCommentPreDTO>(result));
+        }
+
+
         [HttpGet]
         [Route("GetPostById/{postId:int}")]
-        public async Task<IActionResult> GetPostById([FromRoute]int postId)
+        public async Task<IActionResult> GetPostById([FromRoute] int postId)
         {
             var post = await impPostRepository.GetPostByIdAsync(postId);
             if (post == null)
@@ -49,10 +59,23 @@ namespace PEP.Controllers
             }
             return Ok(mapper.Map<PostsOverviewDTO>(post));
         }
+        [HttpGet]
+        [Route("GetCommentsByPostId")]
+        public async Task<IActionResult> GetCommentsByPostId([FromQuery] int postId, [FromQuery]int pageNumber, [FromQuery] int? pageSize)
+        {
+            var comments = await impPostRepository.GetCommentsByPostIdAsync(postId,pageNumber,pageSize);
+            if (comments == null)
+            {
+                return NotFound();
+            }
+            return Ok(mapper.Map<List<PostCommentPreDTO>>(comments));
+
+
+        }
 
         [HttpDelete]
         [Route("DeletePostById/{postId:int}")]
-        public async Task<IActionResult> DeletePostById([FromRoute]int postId)
+        public async Task<IActionResult> DeletePostById([FromRoute] int postId)
         {
             var post = await impPostRepository.DeletePostByIdAsync(postId);
             if (post == null)
@@ -61,10 +84,21 @@ namespace PEP.Controllers
             }
             return Ok(mapper.Map<PostsOverviewDTO>(post));
         }
+        [HttpDelete]
+        [Route("DeleteCommentById/{commentId:int}")]
+        public async Task<IActionResult> DeleteCommentById([FromRoute] int commentId)
+        {
+            var comment = await impPostRepository.DeleteCommentByIdAsync(commentId);
+            if (comment == null)
+            {
+                return NotFound();
+            }
+            return Ok(mapper.Map<PostCommentPreDTO>(comment));
+        }
 
         [HttpPut]
         [Route("UpdatePost/{postId:int}")]
-        public async Task<IActionResult> UpdatePost([FromRoute]int postId, [FromBody] PostUpdateDTO updatePostDTO)
+        public async Task<IActionResult> UpdatePost([FromRoute] int postId, [FromBody] PostUpdateDTO updatePostDTO)
         {
             var post = mapper.Map<Post>(updatePostDTO);
             var result = await impPostRepository.UpdatePostAsync(postId, post);
@@ -77,7 +111,7 @@ namespace PEP.Controllers
 
         [HttpGet]
         [Route("GetPostsListByUserId")]
-        public async Task<IActionResult> GetPostsListByUserId([FromQuery]int userId, [FromQuery]int pageNumber, [FromQuery]int? pageSize)
+        public async Task<IActionResult> GetPostsListByUserId([FromQuery] int userId, [FromQuery] int pageNumber, [FromQuery] int? pageSize)
         {
             var allPosts = await impPostRepository.GetPostsListByUserIdAsync(userId, pageNumber, pageSize);
             return Ok(mapper.Map<List<PostsOverviewDTO>>(allPosts));

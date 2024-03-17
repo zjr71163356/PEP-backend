@@ -14,5 +14,13 @@ namespace PEP.Repositories.Interface
 
         Task<List<Post>?> GetPostsListByUserIdAsync(int userId, int pageNumber, int? pageSize);
 
+        Task<Comment?> AddCommentAsync(Comment comment);
+        Task<Comment?> DeleteCommentByIdAsync(int commentId);
+
+        Task<List<Comment>?> GetCommentsByPostIdAsync(int postId, int pageNumber, int? pageSize);
+         
+        
+
+
     }
 }

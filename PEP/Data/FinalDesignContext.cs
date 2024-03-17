@@ -81,7 +81,7 @@ public partial class FinalDesignContext : DbContext
                 .HasColumnName("from_username");
             entity.Property(e => e.PostId).HasColumnName("post_id");
             entity.Property(e => e.Timestamp)
-                .HasMaxLength(255)
+                .HasColumnType("smalldatetime")
                 .HasColumnName("timestamp");
 
             entity.HasOne(d => d.FromUser).WithMany(p => p.Comments)
@@ -218,7 +218,7 @@ public partial class FinalDesignContext : DbContext
                 .HasColumnName("from_username");
             entity.Property(e => e.ReplyContent).HasColumnName("reply_content");
             entity.Property(e => e.Timestamp)
-                .HasMaxLength(255)
+                .HasColumnType("smalldatetime")
                 .HasColumnName("timestamp");
             entity.Property(e => e.ToUserId).HasColumnName("to_user_id");
             entity.Property(e => e.ToUsername)

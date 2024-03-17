@@ -15,7 +15,7 @@ public partial class Comment
 
     public string CommentContent { get; set; } = null!;
 
-    public string Timestamp { get; set; } = null!;
+    public DateTime Timestamp { get; set; }
 
     public virtual User FromUser { get; set; } = null!;
 

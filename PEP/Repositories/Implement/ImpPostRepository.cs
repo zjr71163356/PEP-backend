@@ -13,12 +13,33 @@ namespace PEP.Repositories.Implement
         {
             this.dbContext = dbContext;
         }
+
+        public async Task<Comment?> AddCommentAsync(Comment comment)
+        {
+            await dbContext.Comments.AddAsync(comment);
+            await dbContext.SaveChangesAsync();
+            return comment;
+        }
+
         public async Task<Post?> AddPostAsync(Post post)
         {
             await dbContext.Posts.AddAsync(post);
             await dbContext.SaveChangesAsync();
             return post;
         }
+
+        public async Task<Comment?> DeleteCommentByIdAsync(int commentId)
+        {
+            var existingComment = await dbContext.Comments.Include(c => c.Replies).FirstOrDefaultAsync(c => c.CommentId == commentId);
+            if (existingComment == null)
+            {
+                return null;
+            }
+            dbContext.Comments.Remove(existingComment);
+            await dbContext.SaveChangesAsync();
+            return existingComment;
+        }
+
 
         public async Task<Post?> DeletePostByIdAsync(int postId)
         {
@@ -34,6 +55,23 @@ namespace PEP.Repositories.Implement
 
         }
 
+        public async Task<List<Comment>?> GetCommentsByPostIdAsync(int postId, int pageNumber, int? pageSize)
+        {
+            var comments = dbContext.Comments.Include(c => c.Replies).Where(c => c.PostId == postId).OrderByDescending(c => c.Timestamp);
+
+            if (pageSize != null)
+            {
+                int skipResult = (pageNumber - 1) * pageSize.Value;
+                return await comments.Skip(skipResult).Take(pageSize.Value).ToListAsync();
+            }
+            else
+            {
+                return await comments.ToListAsync();
+            }
+
+        
+        }
+
         public async Task<Post?> GetPostByIdAsync(int postId)
         {
             var result = await dbContext.Posts.FirstOrDefaultAsync(p => p.PostId == postId);
@@ -46,7 +84,7 @@ namespace PEP.Repositories.Implement
 
         public async Task<List<Post>?> GetPostsListByProblemIdAsync(bool isSolution, int problemId, int pageNumber, int? pageSize)
         {
-            var postListQuery = dbContext.Posts.Include(p => p.User).AsQueryable();
+            var postListQuery = dbContext.Posts.Include(p => p.User).OrderByDescending(p => p.PostTime).AsQueryable();
             postListQuery = postListQuery.Where(p => p.ProblemId == problemId && p.PostType == isSolution);
             if (pageSize == null)
             {
@@ -57,12 +95,11 @@ namespace PEP.Repositories.Implement
                 int skipResult = (pageNumber - 1) * pageSize.Value;
                 return await postListQuery.Skip(skipResult).Take(pageSize.Value).ToListAsync();
             }
-
         }
 
         public async Task<List<Post>?> GetPostsListByUserIdAsync(int userId, int pageNumber, int? pageSize)
         {
-            var existingPost =   dbContext.Posts.Where(p => p.UserId == userId).AsQueryable();
+            var existingPost = dbContext.Posts.Where(p => p.UserId == userId).AsQueryable();
             if (pageSize == null)
             {
                 return await existingPost.ToListAsync();
@@ -84,7 +121,7 @@ namespace PEP.Repositories.Implement
             }
             result.PostContent = post.PostContent;
             result.PostTime = post.PostTime;
-            result.Title= post.Title;
+            result.Title = post.Title;
             await dbContext.SaveChangesAsync();
 
             return result;

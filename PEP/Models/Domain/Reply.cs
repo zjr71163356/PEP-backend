@@ -19,7 +19,7 @@ public partial class Reply
 
     public string ReplyContent { get; set; } = null!;
 
-    public string Timestamp { get; set; } = null!;
+    public DateTime Timestamp { get; set; }
 
     public virtual Comment Comment { get; set; } = null!;
 

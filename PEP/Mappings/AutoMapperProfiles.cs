@@ -70,6 +70,10 @@ namespace PEP.Mappings
             CreateMap<PostsOverviewDTO, Post>().ReverseMap();
             CreateMap<PostAddDTO, Post>().ReverseMap();
             CreateMap<PostUpdateDTO, Post>().ReverseMap();
+
+            //about Comment
+            CreateMap<PostCommentAddDTO, Comment>().ReverseMap();
+            CreateMap<PostCommentPreDTO, Comment>().ReverseMap();
             
 
 
