@@ -133,9 +133,9 @@ namespace PEP.Controllers
 
         [HttpGet]
         [Route("GetPostsListByUserId")]
-        public async Task<IActionResult> GetPostsListByUserId([FromQuery] int userId, [FromQuery] int pageNumber, [FromQuery] int? pageSize)
+        public async Task<IActionResult> GetPostsListByUserId([FromQuery] int userId, [FromQuery] int pageNumber, [FromQuery] int? pageSize, [FromQuery] bool isSolution)
         {
-            var allPosts = await impPostRepository.GetPostsListByUserIdAsync(userId, pageNumber, pageSize);
+            var allPosts = await impPostRepository.GetPostsListByUserIdAsync(userId, pageNumber, pageSize, isSolution);
             return Ok(mapper.Map<List<PostsOverviewDTO>>(allPosts));
         }
     }

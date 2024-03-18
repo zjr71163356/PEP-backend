@@ -12,7 +12,7 @@ namespace PEP.Repositories.Interface
         Task<Post?> UpdatePostAsync(int postId, Post post);
         Task<Post?> DeletePostByIdAsync(int postId);
 
-        Task<List<Post>?> GetPostsListByUserIdAsync(int userId, int pageNumber, int? pageSize);
+        Task<List<Post>?> GetPostsListByUserIdAsync(int userId, int pageNumber, int? pageSize, bool isSolution = true);
 
         Task<Comment?> AddCommentAsync(Comment comment);
         Task<Comment?> DeleteCommentByIdAsync(int commentId);

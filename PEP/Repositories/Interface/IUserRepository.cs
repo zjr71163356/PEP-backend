@@ -7,7 +7,7 @@ namespace PEP.Repositories.Interface
     public interface IUserRepository
     {
         Task<User?> RegisterUserAsync(User user);
-
+        Task<bool> IsUserPWMatchAsync(string userAccount, string PW);
         Task<bool> IsUsernameTakenAsync(string username);
 
         Task<bool> IsUserAccountTakenAsync(string userAccount);
@@ -35,7 +35,9 @@ namespace PEP.Repositories.Interface
         Task<SubmissionRecord?> GetSubmissionRecordById(int recordId);
 
         Task<User?> UpdateUserById(int userId, User user);
+        Task<User?> UpdateUserProfileById(int userId, User user);
 
+        Task<User?> UpdateUserPassword(int userId, User user);
         Task<User?> GetUserById(int userId);
 
         Task<string?> GetUserNameById(int userId);

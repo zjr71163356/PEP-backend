@@ -116,9 +116,9 @@ namespace PEP.Repositories.Implement
             }
         }
 
-        public async Task<List<Post>?> GetPostsListByUserIdAsync(int userId, int pageNumber, int? pageSize)
+        public async Task<List<Post>?> GetPostsListByUserIdAsync(int userId, int pageNumber, int? pageSize, bool isSolution = true)
         {
-            var existingPost = dbContext.Posts.Where(p => p.UserId == userId).AsQueryable();
+            var existingPost = dbContext.Posts.Where(p => p.UserId == userId && p.PostType == isSolution).AsQueryable();
             if (pageSize == null)
             {
                 return await existingPost.ToListAsync();

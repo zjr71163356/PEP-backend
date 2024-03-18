@@ -35,8 +35,8 @@ namespace PEP.Mappings
             CreateMap<PreCoursesSubChapterDTO, SubChapter>().ReverseMap();
             CreateMap<PreCoursesSubChapterWithMDDTO, SubChapter>().ReverseMap();
             CreateMap<SubChapterMDContentDTO, SubChapter>().ReverseMap();
-           
-            
+
+
             //about User
             CreateMap<UserRegisterDTO, User>().ReverseMap();
             CreateMap<UserLoginDTO, User>().ReverseMap();
@@ -66,6 +66,9 @@ namespace PEP.Mappings
             //about User
             CreateMap<UserAddDTO, User>().ReverseMap();
             CreateMap<UserPreDTO, User>().ReverseMap();
+            CreateMap<UserProfileEditDTO, User>().ReverseMap();
+            CreateMap<UserAvatarDTO, User>().ReverseMap();
+            CreateMap<UserPWEditDTO, User>().ReverseMap();
 
             //about Post
             CreateMap<PostsOverviewDTO, Post>().ReverseMap();
@@ -75,7 +78,7 @@ namespace PEP.Mappings
             //about Comment
             CreateMap<PostCommentAddDTO, Comment>().ReverseMap();
             CreateMap<PostCommentPreDTO, Comment>().ReverseMap();
-            
+
             //about Reply
             CreateMap<PostReplyAddDTO, Reply>().ReverseMap();
             CreateMap<PostReplyPreDTO, Reply>().ReverseMap();

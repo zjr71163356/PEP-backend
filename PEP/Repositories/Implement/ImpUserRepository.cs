@@ -152,6 +152,16 @@ namespace PEP.Repositories.Implement
             return await dbContext.Users.AnyAsync(u => u.UserName == username);
         }
 
+        public async Task<bool> IsUserPWMatchAsync(string userAccount,string PW)
+        {
+         var user=  await dbContext.Users.FirstOrDefaultAsync(u => u.Account == userAccount&&u.Password== PW);
+            if (user == null)
+            {
+                return false;
+            }
+            return true;
+        }
+
         public async Task<User?> LoginUserAsync(User user)
         {
             var loginResult = await dbContext.Users.FirstOrDefaultAsync(u => u.Account == user.Account && u.Password == user.Password);
@@ -217,6 +227,31 @@ namespace PEP.Repositories.Implement
             return existingUser;
 
 
+        }
+
+        public async Task<User?> UpdateUserPassword(int userId, User user)
+        {
+          var existingUser  =await dbContext.Users.FirstOrDefaultAsync(u => u.UserId == userId);
+            if (existingUser == null)
+            {
+                return null;
+            }
+            existingUser.Password = user.Password;
+            await dbContext.SaveChangesAsync();
+            return existingUser;
+        }
+
+        public  async Task<User?> UpdateUserProfileById(int userId, User user)
+        {
+          var existingUser  =await dbContext.Users.FirstOrDefaultAsync(u => u.UserId == userId);
+            if (existingUser == null)
+            {
+                return null;
+            }
+            existingUser.UserName = user.UserName;
+            existingUser.Avatar = user.Avatar;
+            await dbContext.SaveChangesAsync();
+            return existingUser;
         }
     }
 

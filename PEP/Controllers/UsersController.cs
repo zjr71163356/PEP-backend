@@ -125,7 +125,16 @@ namespace PEP.Controllers
             return Ok(new { userAccount, isUserAccountRepeat });
 
         }
+        [HttpPost]
+        [Route("isUserPWMatch")]
+        public async Task<IActionResult> isUserPWMatch([FromForm] UserLoginDTO userLoginDTO)
+        {
+            var isTrue = await impUserRepository.IsUserPWMatchAsync(userLoginDTO.Account, userLoginDTO.Password);
 
+
+            return Ok(isTrue);
+
+        }
 
         [HttpGet]
         [Route("isUserCourseRepeat")]
@@ -241,6 +250,33 @@ namespace PEP.Controllers
             return Ok(mapper.Map<UserPreDTO>(result));
 
         }
+        [HttpPut]
+        [Route("UpdateUserProfile/{userId:int}")]
+        public async Task<IActionResult> UpdateUserProfile([FromRoute] int userId, [FromBody] UserProfileEditDTO userProfileUpdateDTO)
+        {
+            var userProfile = mapper.Map<User>(userProfileUpdateDTO);
+            var result = await impUserRepository.UpdateUserProfileById(userId, userProfile);
+            if (result == null)
+            {
+                return NotFound();
+            }
+            return Ok(mapper.Map<UserPreDTO>(result));
+
+        }
+        [HttpPut]
+        [Route("UpdateUserPassword/{userId:int}")]
+        public async Task<IActionResult> UpdateUserPassword([FromRoute] int userId, [FromBody] UserPWEditDTO userPWEditDTO)
+        {
+            var user = mapper.Map<User>(userPWEditDTO);
+            var result = await impUserRepository.UpdateUserPassword(userId, user);
+            if (result == null)
+            {
+                return NotFound();
+            }
+            return Ok(mapper.Map<UserPreDTO>(result));
+
+        }
+
 
 
         [HttpDelete]
