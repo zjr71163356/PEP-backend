@@ -41,6 +41,7 @@ namespace PEP.Mappings
             CreateMap<UserRegisterDTO, User>().ReverseMap();
             CreateMap<UserLoginDTO, User>().ReverseMap();
             CreateMap<UserLoginResultDTO, User>().ReverseMap();
+            CreateMap<UserAvatarDTO, User>().ReverseMap();
 
             //about UserCourse
             CreateMap<UserCourseAddDTO, UserCourse>().ReverseMap();
@@ -78,6 +79,8 @@ namespace PEP.Mappings
             //about Reply
             CreateMap<PostReplyAddDTO, Reply>().ReverseMap();
             CreateMap<PostReplyPreDTO, Reply>().ReverseMap();
+
+            //
 
 
 

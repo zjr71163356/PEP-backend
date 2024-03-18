@@ -1,4 +1,6 @@
-﻿namespace PEP.Models.DTO.Post
+﻿using PEP.Models.DTO.User;
+
+namespace PEP.Models.DTO.Post
 {
     public class PostReplyPreDTO
     {
@@ -17,5 +19,9 @@
         public string ReplyContent { get; set; } = null!;
 
         public DateTime Timestamp { get; set; }
+
+        public virtual UserAvatarDTO FromUser { get; set; } = null!;
+
+
     }
 }

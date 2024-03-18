@@ -1,4 +1,5 @@
 ﻿using PEP.Models.DTO.Courses.Both;
+using PEP.Models.DTO.User;
 
 namespace PEP.Models.DTO.Post
 {
@@ -16,5 +17,6 @@ namespace PEP.Models.DTO.Post
 
         public DateTime Timestamp { get; set; }
         public virtual ICollection<PostReplyPreDTO> Replies { get; set; } = new List<PostReplyPreDTO>();
+        public virtual UserAvatarDTO FromUser { get; set; } = null!;
     }
 }

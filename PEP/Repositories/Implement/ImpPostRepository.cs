@@ -76,7 +76,7 @@ namespace PEP.Repositories.Implement
 
         public async Task<List<Comment>?> GetCommentsByPostIdAsync(int postId, int pageNumber, int? pageSize)
         {
-            var comments = dbContext.Comments.Include(c => c.Replies).Where(c => c.PostId == postId).OrderByDescending(c => c.Timestamp);
+            var comments = dbContext.Comments.Include(c=>c.FromUser).Include(c => c.Replies).ThenInclude(r=>r.FromUser).Where(c => c.PostId == postId).OrderByDescending(c => c.Timestamp);
 
             if (pageSize != null)
             {
