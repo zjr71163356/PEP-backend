@@ -28,6 +28,13 @@ namespace PEP.Repositories.Implement
             return post;
         }
 
+        public async Task<Reply?> AddReplyAsync(Reply reply)
+        {
+            await dbContext.Replies.AddAsync(reply);
+            await dbContext.SaveChangesAsync();
+            return reply;
+        }
+
         public async Task<Comment?> DeleteCommentByIdAsync(int commentId)
         {
             var existingComment = await dbContext.Comments.Include(c => c.Replies).FirstOrDefaultAsync(c => c.CommentId == commentId);
@@ -55,6 +62,18 @@ namespace PEP.Repositories.Implement
 
         }
 
+        public async Task<Reply?> DeleteReplyByIdAsync(int replyId)
+        {
+            var existingReply = await dbContext.Replies.FirstOrDefaultAsync(r => r.ReplyId == replyId);
+            if (existingReply == null)
+            {
+                return null;
+            }
+            dbContext.Replies.Remove(existingReply);
+            await dbContext.SaveChangesAsync();
+            return existingReply;
+        }
+
         public async Task<List<Comment>?> GetCommentsByPostIdAsync(int postId, int pageNumber, int? pageSize)
         {
             var comments = dbContext.Comments.Include(c => c.Replies).Where(c => c.PostId == postId).OrderByDescending(c => c.Timestamp);
@@ -69,7 +88,7 @@ namespace PEP.Repositories.Implement
                 return await comments.ToListAsync();
             }
 
-        
+
         }
 
         public async Task<Post?> GetPostByIdAsync(int postId)
@@ -111,6 +130,8 @@ namespace PEP.Repositories.Implement
             }
 
         }
+
+   
 
         public async Task<Post?> UpdatePostAsync(int postId, Post post)
         {

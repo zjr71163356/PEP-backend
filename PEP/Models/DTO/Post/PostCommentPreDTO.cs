@@ -1,4 +1,6 @@
-﻿namespace PEP.Models.DTO.Post
+﻿using PEP.Models.DTO.Courses.Both;
+
+namespace PEP.Models.DTO.Post
 {
     public class PostCommentPreDTO
     {
@@ -13,5 +15,6 @@
         public string CommentContent { get; set; } = null!;
 
         public DateTime Timestamp { get; set; }
+        public virtual ICollection<PostReplyPreDTO> Replies { get; set; } = new List<PostReplyPreDTO>();
     }
 }

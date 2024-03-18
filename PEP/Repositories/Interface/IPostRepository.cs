@@ -18,8 +18,12 @@ namespace PEP.Repositories.Interface
         Task<Comment?> DeleteCommentByIdAsync(int commentId);
 
         Task<List<Comment>?> GetCommentsByPostIdAsync(int postId, int pageNumber, int? pageSize);
-         
-        
+
+        Task<Reply?> AddReplyAsync(Reply reply);
+        Task<Reply?> DeleteReplyByIdAsync(int replyId);
+
+        //Task<List<Reply>?> GetReplysByPostIdAsync(int commentId, int pageNumber, int? pageSize);
+
 
 
     }

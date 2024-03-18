@@ -47,6 +47,15 @@ namespace PEP.Controllers
             return Ok(mapper.Map<PostCommentPreDTO>(result));
         }
 
+        [HttpPost]
+        [Route("AddReply")]
+        public async Task<IActionResult> AddReply([FromBody] PostReplyAddDTO addReplyDTO)
+        {
+            var reply = mapper.Map<Reply>(addReplyDTO);
+            var result = await impPostRepository.AddReplyAsync(reply);
+            return Ok(mapper.Map<PostReplyPreDTO>(result));
+        }
+
 
         [HttpGet]
         [Route("GetPostById/{postId:int}")]
@@ -68,7 +77,8 @@ namespace PEP.Controllers
             {
                 return NotFound();
             }
-            return Ok(mapper.Map<List<PostCommentPreDTO>>(comments));
+            var  result = mapper.Map<List<PostCommentPreDTO>>(comments);
+            return Ok(result);
 
 
         }
@@ -94,6 +104,18 @@ namespace PEP.Controllers
                 return NotFound();
             }
             return Ok(mapper.Map<PostCommentPreDTO>(comment));
+        }
+
+        [HttpDelete]
+        [Route("DeleteReplyById/{replyId:int}")]
+        public async Task<IActionResult> DeleteReplyById([FromRoute] int replyId)
+        {
+            var reply = await impPostRepository.DeleteReplyByIdAsync(replyId);
+            if (reply == null)
+            {
+                return NotFound();
+            }
+            return Ok(mapper.Map<PostReplyPreDTO>(reply));
         }
 
         [HttpPut]
