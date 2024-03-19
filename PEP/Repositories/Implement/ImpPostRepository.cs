@@ -16,6 +16,16 @@ namespace PEP.Repositories.Implement
 
         public async Task<Comment?> AddCommentAsync(Comment comment)
         {
+            var existingPost = await dbContext.Posts.FirstOrDefaultAsync(p => p.PostId == comment.PostId);
+
+
+            if (existingPost == null)
+            {
+                return null;
+            }
+
+            existingPost.PostTime = DateTime.Now;
+            comment.Timestamp = DateTime.Now;
             await dbContext.Comments.AddAsync(comment);
             await dbContext.SaveChangesAsync();
             return comment;
@@ -23,6 +33,7 @@ namespace PEP.Repositories.Implement
 
         public async Task<Post?> AddPostAsync(Post post)
         {
+            post.PostTime = DateTime.Now;
             await dbContext.Posts.AddAsync(post);
             await dbContext.SaveChangesAsync();
             return post;
@@ -30,6 +41,7 @@ namespace PEP.Repositories.Implement
 
         public async Task<Reply?> AddReplyAsync(Reply reply)
         {
+            reply.Timestamp= DateTime.Now;
             await dbContext.Replies.AddAsync(reply);
             await dbContext.SaveChangesAsync();
             return reply;
@@ -76,7 +88,7 @@ namespace PEP.Repositories.Implement
 
         public async Task<List<Comment>?> GetCommentsByPostIdAsync(int postId, int pageNumber, int? pageSize)
         {
-            var comments = dbContext.Comments.Include(c=>c.FromUser).Include(c => c.Replies).ThenInclude(r=>r.FromUser).Where(c => c.PostId == postId).OrderByDescending(c => c.Timestamp);
+            var comments = dbContext.Comments.Include(c => c.FromUser).Include(c => c.Replies).ThenInclude(r => r.FromUser).Where(c => c.PostId == postId).OrderByDescending(c => c.Timestamp);
 
             if (pageSize != null)
             {
@@ -131,7 +143,7 @@ namespace PEP.Repositories.Implement
 
         }
 
-   
+
 
         public async Task<Post?> UpdatePostAsync(int postId, Post post)
         {
@@ -141,7 +153,7 @@ namespace PEP.Repositories.Implement
                 return null;
             }
             result.PostContent = post.PostContent;
-            result.PostTime = post.PostTime;
+            result.PostTime = DateTime.Now;
             result.Title = post.Title;
             await dbContext.SaveChangesAsync();
 
