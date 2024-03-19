@@ -19,9 +19,13 @@ public partial class Post
 
     public int ProblemId { get; set; }
 
+    public int Likes { get; set; }
+
     public virtual ICollection<Comment> Comments { get; set; } = new List<Comment>();
 
     public virtual AlgorithmProblem Problem { get; set; } = null!;
 
     public virtual User User { get; set; } = null!;
+
+    public virtual ICollection<UserLike> UserLikes { get; set; } = new List<UserLike>();
 }

@@ -15,8 +15,9 @@
         public string PostContent { get; set; } = null!;
 
         public bool PostType { get; set; }
+        public int Likes { get; set; }
 
-   
- 
+
+
     }
 }

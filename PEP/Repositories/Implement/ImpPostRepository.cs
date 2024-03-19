@@ -41,10 +41,28 @@ namespace PEP.Repositories.Implement
 
         public async Task<Reply?> AddReplyAsync(Reply reply)
         {
-            reply.Timestamp= DateTime.Now;
+            reply.Timestamp = DateTime.Now;
             await dbContext.Replies.AddAsync(reply);
             await dbContext.SaveChangesAsync();
             return reply;
+        }
+
+        public async Task<UserLike?> AddUserLikeAsync(UserLike userLike)
+        {
+            var existingLike = await dbContext.UserLikes.FirstOrDefaultAsync(ul => ul.UserId == userLike.UserId && ul.PostId == userLike.PostId);
+            if (existingLike != null)
+            {
+                return null;
+            }
+            var existingPost = await dbContext.Posts.FirstOrDefaultAsync(p => p.PostId == userLike.PostId);
+            if (existingPost == null)
+            {
+                return null;
+            }
+            existingPost.Likes++;
+            await dbContext.UserLikes.AddAsync(userLike);
+            await dbContext.SaveChangesAsync();
+            return userLike;
         }
 
         public async Task<Comment?> DeleteCommentByIdAsync(int commentId)
@@ -86,6 +104,24 @@ namespace PEP.Repositories.Implement
             return existingReply;
         }
 
+        public async Task<UserLike?> DeleteUserLikeAsync(int userId, int postId)
+        {
+            var existingUserLike = await dbContext.UserLikes.FirstOrDefaultAsync(ul => ul.UserId == userId && ul.PostId == postId);
+            if (existingUserLike == null)
+            {
+                return null;
+            }
+            var existingPost = await dbContext.Posts.FirstOrDefaultAsync(p => p.PostId == postId);
+            if (existingPost == null)
+            {
+                return null;
+            }
+            existingPost.Likes--;
+            dbContext.UserLikes.Remove(existingUserLike);
+            await dbContext.SaveChangesAsync();
+            return existingUserLike;
+        }
+
         public async Task<List<Comment>?> GetCommentsByPostIdAsync(int postId, int pageNumber, int? pageSize)
         {
             var comments = dbContext.Comments.Include(c => c.FromUser).Include(c => c.Replies).ThenInclude(r => r.FromUser).Where(c => c.PostId == postId).OrderByDescending(c => c.Timestamp);
@@ -117,6 +153,11 @@ namespace PEP.Repositories.Implement
         {
             var postListQuery = dbContext.Posts.Include(p => p.User).OrderByDescending(p => p.PostTime).AsQueryable();
             postListQuery = postListQuery.Where(p => p.ProblemId == problemId && p.PostType == isSolution);
+
+            if(isSolution)
+            {
+                postListQuery = postListQuery.OrderByDescending(p=>p.Likes);
+            }
             if (pageSize == null)
             {
                 return await postListQuery.ToListAsync();

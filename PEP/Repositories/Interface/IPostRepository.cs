@@ -22,6 +22,10 @@ namespace PEP.Repositories.Interface
         Task<Reply?> AddReplyAsync(Reply reply);
         Task<Reply?> DeleteReplyByIdAsync(int replyId);
 
+        Task<UserLike?> AddUserLikeAsync(UserLike userLike);
+
+        Task<UserLike?> DeleteUserLikeAsync(int userId,int postId);
+
         //Task<List<Reply>?> GetReplysByPostIdAsync(int commentId, int pageNumber, int? pageSize);
 
 

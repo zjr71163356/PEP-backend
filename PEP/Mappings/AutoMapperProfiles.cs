@@ -83,7 +83,8 @@ namespace PEP.Mappings
             CreateMap<PostReplyAddDTO, Reply>().ReverseMap();
             CreateMap<PostReplyPreDTO, Reply>().ReverseMap();
 
-            //
+            //about UserLike
+            CreateMap<PostLikeAddDTO, UserLike>().ReverseMap();
 
 
 

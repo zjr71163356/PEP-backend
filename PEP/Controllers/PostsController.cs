@@ -55,7 +55,15 @@ namespace PEP.Controllers
             var result = await impPostRepository.AddReplyAsync(reply);
             return Ok(mapper.Map<PostReplyPreDTO>(result));
         }
-
+        [HttpPost]
+        [Route("AddUserLike")]
+        public async Task<IActionResult> AddUserLike([FromBody] PostLikeAddDTO postLikeAddDTO)
+        {
+            var userlike=  mapper.Map<UserLike>(postLikeAddDTO);
+            var result = await impPostRepository.AddUserLikeAsync(userlike);
+       
+            return Ok(mapper.Map<PostLikeAddDTO>(result));
+        }
 
         [HttpGet]
         [Route("GetPostById/{postId:int}")]
@@ -116,6 +124,14 @@ namespace PEP.Controllers
                 return NotFound();
             }
             return Ok(mapper.Map<PostReplyPreDTO>(reply));
+        }
+        [HttpDelete]
+        [Route("DeleteUserLike")]
+        public async Task<IActionResult> DeleteUserLike([FromQuery] int userId, [FromQuery] int postId)
+        {
+            var userlike = await impPostRepository.DeleteUserLikeAsync(userId, postId);
+ 
+            return Ok(mapper.Map<PostLikeAddDTO>(userlike));
         }
 
         [HttpPut]

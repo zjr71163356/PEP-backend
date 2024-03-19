@@ -28,4 +28,6 @@ public partial class User
     public virtual ICollection<SubmissionRecord> SubmissionRecords { get; set; } = new List<SubmissionRecord>();
 
     public virtual ICollection<UserCourse> UserCourses { get; set; } = new List<UserCourse>();
+
+    public virtual ICollection<UserLike> UserLikes { get; set; } = new List<UserLike>();
 }

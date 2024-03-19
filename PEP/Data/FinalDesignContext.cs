@@ -42,6 +42,8 @@ public partial class FinalDesignContext : DbContext
 
     public virtual DbSet<UserCourse> UserCourses { get; set; }
 
+    public virtual DbSet<UserLike> UserLikes { get; set; }
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         => optionsBuilder.UseSqlServer("Name=ConnectionStrings:PEPString");
 
@@ -162,6 +164,7 @@ public partial class FinalDesignContext : DbContext
             entity.ToTable("posts");
 
             entity.Property(e => e.PostId).HasColumnName("post_id");
+            entity.Property(e => e.Likes).HasColumnName("likes");
             entity.Property(e => e.PostContent).HasColumnName("post_content");
             entity.Property(e => e.PostTime)
                 .HasDefaultValueSql("(getdate())")
@@ -386,6 +389,27 @@ public partial class FinalDesignContext : DbContext
                 .HasForeignKey(d => d.UserId)
                 .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("fk_user_courses_user_id");
+        });
+
+        modelBuilder.Entity<UserLike>(entity =>
+        {
+            entity.HasKey(e => e.LikeId).HasName("PK__tmp_ms_x__992C7930C0909AF8");
+
+            entity.ToTable("user_likes");
+
+            entity.Property(e => e.LikeId).HasColumnName("like_id");
+            entity.Property(e => e.PostId).HasColumnName("post_id");
+            entity.Property(e => e.UserId).HasColumnName("user_id");
+
+            entity.HasOne(d => d.Post).WithMany(p => p.UserLikes)
+                .HasForeignKey(d => d.PostId)
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("FK_user_likes_posts");
+
+            entity.HasOne(d => d.User).WithMany(p => p.UserLikes)
+                .HasForeignKey(d => d.UserId)
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("FK_user_likes_users");
         });
 
         OnModelCreatingPartial(modelBuilder);
