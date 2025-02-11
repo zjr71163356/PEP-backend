@@ -1,6 +1,6 @@
 # PEP
 
-**PEP** 是一个基于 ASP.NET Core 构建的 Web API 项目，主要用于管理用户、课程、帖子和相关的提交记录。项目采用了分层架构，利用控制器（Controllers）、领域模型（Models）、数据访问层（Repositories）以及 Entity Framework Core 来处理数据库交互。
+**PEP** 是[在线编程平台前端项目](https://github.com/zjr71163356/program-education-platform)的后端项目。一个基于 ASP.NET Core 构建的 Web API 项目，主要用于管理用户、课程、帖子和相关的提交记录。项目采用了分层架构，利用控制器（Controllers）、领域模型（Models）、数据访问层（Repositories）以及 Entity Framework Core 来处理数据库交互。
 
 ## 项目结构
 
